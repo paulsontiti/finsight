@@ -13,9 +13,112 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+
+
+//////////////////////
+// ENUMS
+//////////////////////
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+  TRANSFER
+}
+
+enum LedgerEntryType {
+  DEBIT
+  CREDIT
+}
+
+enum SavingsStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+//////////////////////
+// USER
+//////////////////////
+
 model User {
-    id       String @id @default(uuid()) @map("_id") @db.ObjectId
-  email     String @unique
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
   password  String
-  createdAt DateTime @default(now())
+   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  wallet      Wallet?
+  savings     SavingsPlan[]
+}
+
+//////////////////////
+// WALLET
+//////////////////////
+
+model Wallet {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @unique
+  balance     Int  @default(0) // Cached balance (not source of truth)
+  currency    String   @default("NGN")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete:Cascade)
+  transactions Transaction[]
+  ledgerEntries LedgerEntry[]
+}
+
+//////////////////////
+// TRANSACTION
+//////////////////////
+
+model Transaction {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  walletId      String
+  amount        Int
+  type          TransactionType
+  reference     String           @unique
+  description   String?
+  status        String           @default("SUCCESS")
+  createdAt     DateTime         @default(now())
+
+  // Relations
+  wallet        Wallet           @relation(fields: [walletId], references: [id], onDelete:Cascade)
+  ledgerEntries LedgerEntry[]
+}
+
+//////////////////////
+// LEDGER ENTRY (CRITICAL)
+//////////////////////
+
+model LedgerEntry {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  walletId      String
+  transactionId String
+  amount        Int
+  type          LedgerEntryType
+  createdAt     DateTime          @default(now())
+
+  // Relations
+  wallet        Wallet            @relation(fields: [walletId], references: [id], onDelete:Cascade)
+  transaction   Transaction       @relation(fields: [transactionId], references: [id], onDelete:Cascade)
+}
+
+//////////////////////
+// SAVINGS PLAN
+//////////////////////
+
+model SavingsPlan {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String
+  targetAmount  Int
+  currentAmount Int        @default(0)
+  status        SavingsStatus  @default(ACTIVE)
+  createdAt     DateTime       @default(now())
+
+  // Relations
+  user          User           @relation(fields: [userId], references: [id], onDelete:Cascade)
 }

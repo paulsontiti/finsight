@@ -7,8 +7,8 @@ describe("Wallet Model", () => {
   let userId: string;
 
   beforeEach(async () => {
-    // await prisma.wallet.deleteMany();
-    // await prisma.user.deleteMany();
+    await prisma.wallet.deleteMany();
+    await prisma.user.deleteMany();
 
     const user = await prisma.user.create({
       data: { email: "user@mail.com", password: "123" }

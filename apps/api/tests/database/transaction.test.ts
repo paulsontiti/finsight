@@ -62,7 +62,7 @@ describe("Transaction Model", () => {
   it("total debit should equal total credit", async () => {
     const debit = 100;
     const credit = 100;
-console.log(debit)
+//console.log(debit)
     expect(debit).toBe(credit);
   });
 });

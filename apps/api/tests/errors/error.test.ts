@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { UserAlreadyExistsError } from "../../src/shared/erors/domain.errors.js";
 import { RegisterUserUseCase } from "../../src/application/use-cases/register-user.usecase.js";
 import prisma from "../../src/prisma.js";
+import { AuditLogger } from "../../src/shared/logger/audit.logger.js";
 describe("Error System", () => {
   it("should create domain error correctly", () => {
     const error = new UserAlreadyExistsError();
@@ -27,7 +28,7 @@ describe("Error System", () => {
         password: "123",
       }),
       findById: async () => null,
-    });
+    },new AuditLogger());
 
     await expect(
       useCase.execute({ email: "test@mail.com", password: "123" }),

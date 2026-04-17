@@ -6,7 +6,7 @@
 // Use Cases
 import { FundWalletUseCase } from "../../application/use-cases/fund-wallet.usercase.js";
 import { RegisterUserUseCase } from "../../application/use-cases/register-user.usecase.js";
-import { UserRepository } from "../../domain/repositories/user.repository.js";
+import { PrismaUserRepository } from "../../domain/repositories/user.repository.js";
 import { ConfigService } from "../config/config.service.js";
 import { Container } from "../container.js";
 import { AuditLogger } from "../logger/audit.logger.js";
@@ -28,7 +28,7 @@ container.register("configService", () => new ConfigService(), true);
  * =========================
  */
 container.register("userRepository", () => {
-  return new UserRepository();
+  return new PrismaUserRepository();
 });
 
 /**
@@ -49,7 +49,7 @@ container.register("transactionLogger", () => {
  * =========================
  */
 container.register("registerUserUseCase", (c) => {
-  const userRepo = c.resolve<UserRepository>("userRepository");
+  const userRepo = c.resolve<PrismaUserRepository>("userRepository");
   const auditLogger = c.resolve<AuditLogger>("auditLogger");
 
   return new RegisterUserUseCase(userRepo,auditLogger);

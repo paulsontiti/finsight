@@ -1,26 +1,36 @@
 import { Entity } from "./entity.js";
 
-interface CreateUserProps {
+export interface CreateUserProps {
   //id?: string;
   email: string;
   password: string;
-  createdAt?: Date;
+  //createdAt?: Date;
 }
 
-export class User extends Entity<CreateUserProps>{
-//   private readonly _id: string;
-//   private props.email: string;
-//   private props.password: string;
-//   private readonly props.createdAt: Date;
+export interface DBUserProps {
+  id: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+  updatedAt?: Date;
+}
 
-  constructor(props: CreateUserProps) {
-    super(props)
+export class DBUser extends Entity<DBUserProps>{
+  //private readonly _id: string;
+  private _email: string;
+  private _password: string;
+  private readonly _createdAt: Date;
+  private readonly _updatedAt?: Date;
+
+  constructor(props: DBUserProps) {
+    super()
     // this._id = props.id || randomUUID();
 
-    this.props.email = this.validateAndNormalizeEmail(props.email);
-    this.props.password = this.validatePassword(props.password);
+    this._email = this.validateAndNormalizeEmail(props.email);
+    this._password = this.validatePassword(props.password);
 
-    this.props.createdAt = props.createdAt || new Date();
+    this._createdAt = props.createdAt || new Date();
+     this._updatedAt = props.updatedAt || new Date();
 
     this.validate();
   }
@@ -34,15 +44,15 @@ export class User extends Entity<CreateUserProps>{
 //   }
 
   get email(): string {
-    return this.props.email;
+    return this._email;
   }
 
   get password(): string {
-    return this.props.password;
+    return this._password;
   }
 
-  get createdAt(): Date | undefined {
-    return this.props.createdAt;
+  get createdAt(): Date {
+    return this._createdAt;
   }
 
   // =========================
@@ -54,11 +64,11 @@ export class User extends Entity<CreateUserProps>{
       throw new Error("User ID is required");
     }
 
-    if (!this.props.email) {
+    if (!this._email) {
       throw new Error("Email is required");
     }
 
-    if (!this.props.password) {
+    if (!this._password) {
       throw new Error("Password is required");
     }
   }
@@ -113,18 +123,18 @@ export class User extends Entity<CreateUserProps>{
   // =========================
 
   updateEmail(newEmail: string) {
-    this.props.email = this.validateAndNormalizeEmail(newEmail);
+    this._email = this.validateAndNormalizeEmail(newEmail);
   }
 
   updatePassword(newPassword: string) {
-    this.props.password = this.validatePassword(newPassword);
+    this._password = this.validatePassword(newPassword);
   }
 
   // =========================
   // COMPARISON
   // =========================
 
-  equals(user: User): boolean {
+  equals(user: DBUser): boolean {
     return this.email === user.email;
   }
 
@@ -135,8 +145,8 @@ export class User extends Entity<CreateUserProps>{
   toJSON() {
     return {
       id: this.id,
-      email: this.props.email,
-      createdAt: this.props.createdAt
+      email: this._email,
+      createdAt: this._createdAt
       // ❌ password intentionally excluded
     };
   }

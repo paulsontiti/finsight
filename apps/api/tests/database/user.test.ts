@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import prisma from "../../src/prisma.js";
-import "../../src/config/env.js";
+import "../../src/shared/config/env.js";
 import "../setup/cleanDB.js"
 
 describe("User Model", () => {

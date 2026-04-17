@@ -44,7 +44,7 @@ describe("Transaction Model", () => {
         reference: "123",
       },
     });
-
+//console.log(tx)
     expect(tx.type).toBe("DEBIT");
   });
   // it("should not create transaction without wallet", async () => {

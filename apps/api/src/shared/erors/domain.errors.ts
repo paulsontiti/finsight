@@ -7,6 +7,12 @@ export class UserAlreadyExistsError extends AppError {
   }
 }
 
+export class BcryptHashError extends AppError {
+  constructor() {
+    super("Hashing failed", 409);
+  }
+}
+
 export class UserNotFoundError extends AppError {
   constructor() {
     super("User not found", 404);

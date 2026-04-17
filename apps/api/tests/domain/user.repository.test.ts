@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { DBUser, type CreateUserProps } from "../../src/domain/entities/user.entity.js";
+import { type CreateUserProps } from "../../src/domain/entities/user.entity.js";
 import "../setup/cleanDB.js"
 import { PrismaUserRepository } from "../../src/domain/repositories/user.repository.js";
 
@@ -23,6 +23,7 @@ describe("UserRepository - Create", () => {
 
     const result = await repo.create(user);
     
+    console.log(result)
     expect(result.id).toBeDefined();
     expect(result.email).toBe("test@mail.com");
   });

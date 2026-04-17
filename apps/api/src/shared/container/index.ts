@@ -11,6 +11,7 @@ import { ConfigService } from "../config/config.service.js";
 import { Container } from "../container.js";
 import { AuditLogger } from "../logger/audit.logger.js";
 import { TransactionLogger } from "../logger/transaction.logger.js";
+import { BcryptService } from "../security/bcrypt.service.js";
 
 // Shared instance
 export const container = new Container();
@@ -29,6 +30,10 @@ container.register("configService", () => new ConfigService(), true);
  */
 container.register("userRepository", () => {
   return new PrismaUserRepository();
+});
+
+container.register("hashServiceRepository", () => {
+  return new BcryptService();
 });
 
 /**
@@ -51,8 +56,9 @@ container.register("transactionLogger", () => {
 container.register("registerUserUseCase", (c) => {
   const userRepo = c.resolve<PrismaUserRepository>("userRepository");
   const auditLogger = c.resolve<AuditLogger>("auditLogger");
+  const hashService = c.resolve<BcryptService>("hashServiceRepository");
 
-  return new RegisterUserUseCase(userRepo,auditLogger);
+  return new RegisterUserUseCase(userRepo,hashService,auditLogger);
 });
 
 container.register("fundWalletUseCase", (c) => {

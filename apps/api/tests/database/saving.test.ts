@@ -24,7 +24,7 @@ describe("Savings Plans", () => {
         targetAmount: 1000
       }
     });
-
+    //console.log(plan)
     expect(plan.targetAmount).toBe(1000);
   });
 

@@ -25,6 +25,7 @@ describe("Wallet Model", () => {
       }
     });
 
+    //console.log(wallet)
     expect(wallet.userId).toBe(userId);
   });
 

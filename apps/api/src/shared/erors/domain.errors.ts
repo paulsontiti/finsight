@@ -20,8 +20,8 @@ export class UserNotFoundError extends AppError {
 }
 
 export class InvalidCredentialsError extends AppError {
-  constructor() {
-    super("Invalid credentials", 401);
+  constructor(message: string = "Invalid credentials") {
+    super(message, 401);
   }
 }
 

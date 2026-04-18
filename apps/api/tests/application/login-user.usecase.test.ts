@@ -146,7 +146,7 @@ it("should generate token with user id", async () => {
   });
 
   expect(tokenService.sign).toHaveBeenCalledWith({
-    userId: "1"
+    user:{userId: "1"}
   });
 });
 

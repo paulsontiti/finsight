@@ -34,7 +34,7 @@ export class LoginUserUseCase {
 
     // 4. Generate token
     const token = this.tokenService.sign({
-      userId: user.id
+      user:{userId: user.id}
     });
 
     // 5. Return response

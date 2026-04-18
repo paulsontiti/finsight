@@ -19,6 +19,12 @@ export class UserNotFoundError extends AppError {
   }
 }
 
+export class InvalidCredentialsError extends AppError {
+  constructor() {
+    super("Invalid credentials", 401);
+  }
+}
+
 export class InsufficientBalanceError extends AppError {
   constructor() {
     super("Insufficient wallet balance", 400);

@@ -7,7 +7,7 @@ import {
 } from "../../shared/erors/domain.errors.js";
 import type { AuditLogger } from "../../shared/logger/audit.logger.js";
 import type { BcryptService } from "../../shared/security/bcrypt.service.js";
-import type { RegisterUserDTO } from "../../shared/types/index.js";
+import type { RegisterLoginUserDTO } from "../../shared/types/index.js";
 import type { UseCase } from "../interfaces/useCase.js";
 
 export class RegisterUserUseCase implements UseCase<any, any> {
@@ -17,7 +17,7 @@ export class RegisterUserUseCase implements UseCase<any, any> {
     private auditLogger?: AuditLogger,
   ) {}
 
-  async execute(data: RegisterUserDTO) {
+  async execute(data: RegisterLoginUserDTO) {
     // =========================
     // 1. NORMALIZE EMAIL
     // =========================

@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { container } from "../../src/shared/container/index.js";
 import { RegisterUserUseCase } from "../../src/application/use-cases/register-user.usecase.js";
 import "../setup/cleanDB.js"
+import prisma from "../../src/prisma.js";
 
 const registerUserUseCase = container.resolve<RegisterUserUseCase>("registerUserUseCase");
 
@@ -84,7 +85,7 @@ it("should normalize email before saving", async () => {
 });
 
 it("should not expose password in response", async () => {
-
+await prisma.user.deleteMany();
 
   const result = await registerUserUseCase.execute({
     email: "test@mail.com",

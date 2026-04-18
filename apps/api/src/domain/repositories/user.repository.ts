@@ -1,14 +1,12 @@
 import prisma from "../../prisma.js";
-import  { type CreateUserProps, type DBUserProps } from "../entities/user.entity.js";
-
-import type { Repository } from "./repository.js";
-
-interface IUserRepository extends Repository<DBUserProps> {
-  findByEmail(email: string): Promise<DBUserProps | null>;
-}
+import type { IUserRepository } from "../../shared/types/index.js";
+import {
+  type CreateUserProps,
+  type DBUserProps,
+} from "../entities/user.entity.js";
 
 export class PrismaUserRepository implements IUserRepository {
-  async create(data: CreateUserProps):Promise<DBUserProps> {
+  async create(data: CreateUserProps): Promise<DBUserProps> {
     return prisma.user.create({
       data,
     });
@@ -22,11 +20,11 @@ export class PrismaUserRepository implements IUserRepository {
 
   async findByEmail(email: string) {
     return prisma.user.findUnique({
-      where: { email:email.trim().toLowerCase() },
+      where: { email: email.trim().toLowerCase() },
     });
   }
 
-   // =========================
+  // =========================
   // MAPPER
   // =========================
 

@@ -23,7 +23,7 @@ describe("UserRepository - Create", () => {
 
     const result = await repo.create(user);
     
-    console.log(result)
+    //console.log(result)
     expect(result.id).toBeDefined();
     expect(result.email).toBe("test@mail.com");
   });

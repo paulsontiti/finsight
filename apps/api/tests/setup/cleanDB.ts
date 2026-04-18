@@ -7,3 +7,4 @@ beforeEach(async () => {
   await prisma.wallet.deleteMany();
   await prisma.user.deleteMany();
 });
+

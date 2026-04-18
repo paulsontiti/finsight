@@ -1,4 +1,5 @@
-import { type CreateUserProps, type DBUserProps, Role } from "../../shared/types/index.js";
+import  { Role } from "../../../generated/prisma/enums.js";
+import { type CreateUserProps, type DBUserProps} from "../../shared/types/index.js";
 import { Entity } from "./entity.js";
 
 export class DBUserEntity extends Entity<DBUserProps> {
@@ -11,7 +12,7 @@ export class DBUserEntity extends Entity<DBUserProps> {
 
   constructor(props: DBUserProps) {
     super();
-    this._role = props.role || Role.USER;
+    this._role = props.role || Role.APPUSER;
 
     this._email = this.validateAndNormalizeEmail(props.email);
     this._password = this.validatePassword(props.password);
@@ -137,7 +138,7 @@ export class DBUserEntity extends Entity<DBUserProps> {
       id: this.id,
       email: this._email,
       createdAt: this._createdAt,
-      updatedAt: this._updatedAt,
+      updatedAt: this._updatedAt,role:this.role
       // ❌ password intentionally excluded
     };
   }

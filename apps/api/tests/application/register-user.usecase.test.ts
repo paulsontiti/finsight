@@ -92,8 +92,7 @@ await prisma.user.deleteMany();
     email: "test@mail.com",
     password: "Password123!"
   });
-  const hasPassword = "password" in  result;
-  expect(hasPassword).toBeFalsy();
+  expect(result).not.toHaveProperty("password");
 });
 
 it("should pass a User entity to repository", async () => {
@@ -107,6 +106,7 @@ it("should pass a User entity to repository", async () => {
 
   expect(savedUser).toHaveProperty("id");
   expect(savedUser).toHaveProperty("email");
+  expect(savedUser).toHaveProperty("role");
 });
 
 });

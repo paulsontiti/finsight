@@ -1,14 +1,24 @@
+import {
+  type IHashService,
+  type ITokenService,
+  type IUserRepository,
+  type RegisterLoginUserDTO,
+} from "../../shared/types/index.js";
+import {
+  InvalidCredentialsError,
+  UserNotFoundError,
+} from "../../shared/erors/domain.errors.js";
+import { Role } from "../../../generated/prisma/enums.js";
+import type { UseCase } from "../interfaces/useCase.js";
 
-import { Role, type ITokenService, type IUserRepository, type RegisterLoginUserDTO } from "../../shared/types/index.js";
-import type { IHashService } from "../../domain/repositories/hash-service.repository.js";
-import { InvalidCredentialsError, UserNotFoundError } from "../../shared/erors/domain.errors.js";
-
-
-export class LoginUserUseCase {
+export class LoginUserUseCase implements UseCase<
+  RegisterLoginUserDTO,
+  { token: string; user: { id: string; email: string } }
+> {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly hashService: IHashService,
-    private readonly tokenService: ITokenService
+    private readonly tokenService: ITokenService,
   ) {}
 
   async execute(data: RegisterLoginUserDTO) {
@@ -25,7 +35,7 @@ export class LoginUserUseCase {
     // 3. Validate password
     const isValid = await this.hashService.compare(
       data.password,
-      user.password
+      user.password,
     );
 
     if (!isValid) {
@@ -34,8 +44,8 @@ export class LoginUserUseCase {
 
     // 4. Generate token
     const token = this.tokenService.sign({
-      user:{userId: user.id},
-      role: user.role || Role.USER
+      user: { userId: user.id },
+      role: user.role || Role.APPUSER,
     });
 
     // 5. Return response
@@ -43,8 +53,8 @@ export class LoginUserUseCase {
       token,
       user: {
         id: user.id,
-        email: user.email
-      }
+        email: user.email,
+      },
     };
   }
 }

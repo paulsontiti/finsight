@@ -36,7 +36,7 @@ export type SavingsStatus = (typeof SavingsStatus)[keyof typeof SavingsStatus]
 
 
 export const Role = {
-  USER: 'USER',
+  APPUSER: 'APPUSER',
   ADMIN: 'ADMIN'
 } as const
 

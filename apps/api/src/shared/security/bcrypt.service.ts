@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import type { IHashService } from "../../domain/repositories/hash-service.repository.js";
+import type { IHashService } from "../types/index.js";
 
 export class BcryptService implements IHashService {
   private readonly saltRounds = 10;

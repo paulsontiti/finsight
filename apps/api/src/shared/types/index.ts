@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import type { Repository } from "../../domain/repositories/repository.js";
+import type { Role } from "../../../generated/prisma/enums.js";
 
 export type RegisterLoginUserDTO = {
   email: string;
@@ -8,7 +8,7 @@ export type RegisterLoginUserDTO = {
 
 export type UserPayload = {
   user: { userId: string };
-  role: Role
+  role: Role;
 };
 export interface ITokenService {
   sign(payload: UserPayload): string;
@@ -20,12 +20,8 @@ export interface IUserRepository extends Repository<DBUserProps> {
 }
 
 export interface AuthRequest extends Request {
-  user?:{userId?: string;}
-}
-
-export enum Role {
-  USER = "USER",
-  ADMIN = "ADMIN"
+  user?: { userId?: string };
+  apiClient: any;
 }
 
 export interface CreateUserProps {
@@ -39,5 +35,30 @@ export interface DBUserProps {
   password: string;
   createdAt: Date;
   updatedAt: Date;
-  role?:Role
+  role: Role;
+}
+
+export interface DBApiKeyProps {
+  id: string;
+  hashedKey: string;
+  ownerId: string;
+  createdAt: Date;
+}
+export interface CreateApiKeyProps {
+  hashedKey: string;
+  ownerId: string;
+}
+
+export interface IApiKeyRepository extends Repository<CreateApiKeyProps> {
+  findByKey(key: string): Promise<CreateApiKeyProps>;
+  
+}
+export interface IHashService {
+  hash(password: string): Promise<string>;
+  compare(password: string, hash: string): Promise<boolean>;
+}
+
+export interface Repository<T> {
+  create(entity: T): Promise<T>;
+  findById(id: string): Promise<T | null>;
 }

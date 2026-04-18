@@ -1,9 +1,6 @@
 import prisma from "../../prisma.js";
-import type { IUserRepository } from "../../shared/types/index.js";
-import {
-  type CreateUserProps,
-  type DBUserProps,
-} from "../entities/user.entity.js";
+import type { CreateUserProps, DBUserProps, IUserRepository } from "../../shared/types/index.js";
+
 
 export class PrismaUserRepository implements IUserRepository {
   async create(data: CreateUserProps): Promise<DBUserProps> {
@@ -12,13 +9,13 @@ export class PrismaUserRepository implements IUserRepository {
     });
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<DBUserProps | null> {
     return prisma.user.findUnique({
       where: { id },
     });
   }
 
-  async findByEmail(email: string) {
+  async findByEmail(email: string): Promise<DBUserProps | null> {
     return prisma.user.findUnique({
       where: { email: email.trim().toLowerCase() },
     });

@@ -36,7 +36,7 @@ enum SavingsStatus {
 }
 
 enum Role {
-  USER
+  APPUSER
   ADMIN
 }
 
@@ -48,7 +48,7 @@ model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String   @unique
   password  String
-  role      Role     @default(USER)
+  role      Role     @default(APPUSER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

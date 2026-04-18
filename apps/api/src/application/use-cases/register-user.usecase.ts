@@ -63,7 +63,7 @@ export class RegisterUserUseCase implements UseCase<any, any> {
       // =========================
 
       
-      const dbUser:DBUserEntity = new DBUserEntity({email:savedUser.email,password:savedUser.password,createdAt:savedUser.createdAt,updatedAt:savedUser.updatedAt,id:savedUser.id})
+      const dbUser:DBUserEntity = new DBUserEntity({email:savedUser.email,password:savedUser.password,createdAt:savedUser.createdAt,updatedAt:savedUser.updatedAt,id:savedUser.id,role:savedUser.role})
 
       return dbUser.toJSON();
     } catch (err: any) {

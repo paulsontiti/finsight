@@ -1,12 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { DBUserEntity } from "../../src/domain/entities/user.entity.js";
+import { Role } from "../../generated/prisma/enums.js";
 
 describe("User Entity - Creation", () => {
   it("should create a valid user", () => {
     const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
 
     expect(user).toBeDefined();
@@ -20,7 +21,7 @@ describe("User Entity - Email Validation", () => {
        new DBUserEntity({
         id:"",
       email: "test@mail",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
     }).toThrow();
   });
@@ -30,7 +31,7 @@ describe("User Entity - Email Validation", () => {
  const user = new DBUserEntity({
         id:"",
       email: "TEST@MAIL.com",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
     expect(user.email).toBe("test@mail.com");
   });
@@ -42,7 +43,7 @@ describe("User Entity - Password Validation", () => {
        new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Pass!",createdAt: new Date(),updatedAt: new Date()
+      password: "Pass!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
     }).toThrow();
   });
@@ -52,7 +53,7 @@ describe("User Entity - Password Validation", () => {
        new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
     }).toThrow();
   });
@@ -62,7 +63,7 @@ describe("User Entity - Password Validation", () => {
        new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Passwordrrr!",createdAt: new Date(),updatedAt: new Date()
+      password: "Passwordrrr!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
     }).toThrow();
   });
@@ -71,7 +72,7 @@ describe("User Entity - Password Validation", () => {
      const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
 
     expect(user).toBeDefined();
@@ -83,7 +84,7 @@ describe("User Entity - ID", () => {
      const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
     expect(user.id).toBeDefined();
   });
@@ -108,7 +109,7 @@ describe("User Entity - Timestamps", () => {
     const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
 
     expect(user.createdAt).toBeInstanceOf(Date);
@@ -123,7 +124,7 @@ describe("User Entity - Business Rules", () => {
        new DBUserEntity({
         id:"",
       email: "",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
     }).toThrow();
   });
@@ -133,7 +134,7 @@ describe("User Entity - Business Rules", () => {
        new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "",createdAt: new Date(),updatedAt: new Date()
+      password: "",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
     }).toThrow();
   });
@@ -146,7 +147,7 @@ describe("User Entity - Serialization", () => {
     const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
     const json = user.toJSON();
     const hasPassword = "password" in json;
@@ -162,13 +163,13 @@ describe("User Entity - Equality", () => {
      const user1 = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
 
      const user2 = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
 
     expect(user1.equals(user2)).toBe(true);
@@ -182,7 +183,7 @@ describe("User Entity - Edge Cases", () => {
      const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
 
     expect(user.email).toBe("test@mail.com");
@@ -194,7 +195,7 @@ describe("User Entity - Edge Cases", () => {
      const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date(),role:Role.APPUSER
     });
 
     expect(user.email).toContain("@mail.com");

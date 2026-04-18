@@ -1,10 +1,9 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { type CreateUserProps } from "../../src/domain/entities/user.entity.js";
 import "../setup/cleanDB.js"
 import { PrismaUserRepository } from "../../src/domain/repositories/user.repository.js";
 
 const repo = new PrismaUserRepository();
-const user:CreateUserProps = {
+const user = {
       email: "test@mail.com",
       password: "Password123!"
     };

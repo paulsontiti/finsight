@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { LoginUserUseCase } from "../../src/application/use-cases/login-user.usecase.js";
+import { Role } from "../../src/shared/types/index.js";
 
 describe("LoginUserUseCase", () => {
 
@@ -146,7 +147,7 @@ it("should generate token with user id", async () => {
   });
 
   expect(tokenService.sign).toHaveBeenCalledWith({
-    user:{userId: "1"}
+    user:{userId: "1"},role: Role.USER || Role.ADMIN
   });
 });
 

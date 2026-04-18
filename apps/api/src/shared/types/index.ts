@@ -1,5 +1,4 @@
 import type { Request } from "express";
-import type { DBUserProps } from "../../domain/entities/user.entity.js";
 import type { Repository } from "../../domain/repositories/repository.js";
 
 export type RegisterLoginUserDTO = {
@@ -9,6 +8,7 @@ export type RegisterLoginUserDTO = {
 
 export type UserPayload = {
   user: { userId: string };
+  role: Role
 };
 export interface ITokenService {
   sign(payload: UserPayload): string;
@@ -21,4 +21,23 @@ export interface IUserRepository extends Repository<DBUserProps> {
 
 export interface AuthRequest extends Request {
   user?:{userId?: string;}
+}
+
+export enum Role {
+  USER = "USER",
+  ADMIN = "ADMIN"
+}
+
+export interface CreateUserProps {
+  email: string;
+  password: string;
+}
+
+export interface DBUserProps {
+  id: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+  role?:Role
 }

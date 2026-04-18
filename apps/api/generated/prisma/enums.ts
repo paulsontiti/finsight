@@ -33,3 +33,11 @@ export const SavingsStatus = {
 } as const
 
 export type SavingsStatus = (typeof SavingsStatus)[keyof typeof SavingsStatus]
+
+
+export const Role = {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+} as const
+
+export type Role = (typeof Role)[keyof typeof Role]

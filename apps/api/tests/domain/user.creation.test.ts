@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { DBUser } from "../../src/domain/entities/user.entity.js";
+import { DBUserEntity } from "../../src/domain/entities/user.entity.js";
 
 describe("User Entity - Creation", () => {
   it("should create a valid user", () => {
-    const user = new DBUser({
+    const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
 
     expect(user).toBeDefined();
@@ -17,20 +17,20 @@ describe("User Entity - Creation", () => {
 describe("User Entity - Email Validation", () => {
   it("should throw error if email is invalid", () => {
     expect(() => {
-       new DBUser({
+       new DBUserEntity({
         id:"",
       email: "test@mail",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
     }).toThrow();
   });
 
   it("should normalize email to lowercase", () => {
    
- const user = new DBUser({
+ const user = new DBUserEntity({
         id:"",
       email: "TEST@MAIL.com",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
     expect(user.email).toBe("test@mail.com");
   });
@@ -39,39 +39,39 @@ describe("User Entity - Email Validation", () => {
 describe("User Entity - Password Validation", () => {
   it("should throw if password is too short", () => {
     expect(() => {
-       new DBUser({
+       new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Pass!",createdAt: new Date()
+      password: "Pass!",createdAt: new Date(),updatedAt: new Date()
     });
     }).toThrow();
   });
 
   it("should throw if password has no uppercase", () => {
     expect(() => {
-       new DBUser({
+       new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "password123!",createdAt: new Date()
+      password: "password123!",createdAt: new Date(),updatedAt: new Date()
     });
     }).toThrow();
   });
 
   it("should throw if password has no number", () => {
     expect(() => {
-       new DBUser({
+       new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Passwordrrr!",createdAt: new Date()
+      password: "Passwordrrr!",createdAt: new Date(),updatedAt: new Date()
     });
     }).toThrow();
   });
 
   it("should accept strong password", () => {
-     const user = new DBUser({
+     const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
 
     expect(user).toBeDefined();
@@ -80,10 +80,10 @@ describe("User Entity - Password Validation", () => {
 
 describe("User Entity - ID", () => {
   it("should set id automatically by base class Entity", () => {
-     const user = new DBUser({
+     const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
     expect(user.id).toBeDefined();
   });
@@ -105,10 +105,10 @@ describe("User Entity - ID", () => {
 describe("User Entity - Timestamps", () => {
 
   it("should set createdAt automatically", () => {
-    const user = new DBUser({
+    const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
 
     expect(user.createdAt).toBeInstanceOf(Date);
@@ -120,20 +120,20 @@ describe("User Entity - Business Rules", () => {
 
   it("should not allow empty email", () => {
     expect(() => {
-       new DBUser({
+       new DBUserEntity({
         id:"",
       email: "",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
     }).toThrow();
   });
 
   it("should not allow empty password", () => {
     expect(() => {
-       new DBUser({
+       new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "",createdAt: new Date()
+      password: "",createdAt: new Date(),updatedAt: new Date()
     });
     }).toThrow();
   });
@@ -143,10 +143,10 @@ describe("User Entity - Business Rules", () => {
 describe("User Entity - Serialization", () => {
 
   it("should return safe JSON (no password exposure)", () => {
-    const user = new DBUser({
+    const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
     const json = user.toJSON();
     const hasPassword = "password" in json;
@@ -159,16 +159,16 @@ describe("User Entity - Serialization", () => {
 describe("User Entity - Equality", () => {
 
   it("should consider users equal if email match", () => {
-     const user1 = new DBUser({
+     const user1 = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
 
-     const user2 = new DBUser({
+     const user2 = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
 
     expect(user1.equals(user2)).toBe(true);
@@ -179,10 +179,10 @@ describe("User Entity - Equality", () => {
 describe("User Entity - Edge Cases", () => {
 
   it("should trim email spaces", () => {
-     const user = new DBUser({
+     const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
 
     expect(user.email).toBe("test@mail.com");
@@ -191,10 +191,10 @@ describe("User Entity - Edge Cases", () => {
   it("should handle very long email safely", () => {
     const longEmail = "a".repeat(100) + "@mail.com";
 
-     const user = new DBUser({
+     const user = new DBUserEntity({
         id:"",
       email: "test@mail.com",
-      password: "Password123!",createdAt: new Date()
+      password: "Password123!",createdAt: new Date(),updatedAt: new Date()
     });
 
     expect(user.email).toContain("@mail.com");

@@ -1,36 +1,23 @@
+import { type CreateUserProps, type DBUserProps, Role } from "../../shared/types/index.js";
 import { Entity } from "./entity.js";
 
-export interface CreateUserProps {
-  //id?: string;
-  email: string;
-  password: string;
-  //createdAt?: Date;
-}
-
-export interface DBUserProps {
-  id: string;
-  email: string;
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export class DBUser extends Entity<DBUserProps>{
+export class DBUserEntity extends Entity<DBUserProps> {
   //private readonly _id: string;
   private _email: string;
   private _password: string;
   private readonly _createdAt: Date;
   private readonly _updatedAt: Date;
+  private _role: Role;
 
   constructor(props: DBUserProps) {
-    super()
-    // this._id = props.id || randomUUID();
+    super();
+    this._role = props.role || Role.USER;
 
     this._email = this.validateAndNormalizeEmail(props.email);
     this._password = this.validatePassword(props.password);
 
     this._createdAt = props.createdAt || new Date();
-     this._updatedAt = props.updatedAt || new Date();
+    this._updatedAt = props.updatedAt || new Date();
 
     this.validate();
   }
@@ -39,9 +26,9 @@ export class DBUser extends Entity<DBUserProps>{
   // GETTERS (READ-ONLY ACCESS)
   // =========================
 
-//   get id(): string {
-//     return this._id;
-//   }
+  get role(): Role {
+    return this._role;
+  }
 
   get email(): string {
     return this._email;
@@ -55,7 +42,7 @@ export class DBUser extends Entity<DBUserProps>{
     return this._createdAt;
   }
 
-   get updateAt(): Date {
+  get updateAt(): Date {
     return this._updatedAt;
   }
 
@@ -84,8 +71,7 @@ export class DBUser extends Entity<DBUserProps>{
 
     const normalized = email.trim().toLowerCase();
 
-    const emailRegex =
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(normalized)) {
       throw new Error("Invalid email format");
@@ -138,7 +124,7 @@ export class DBUser extends Entity<DBUserProps>{
   // COMPARISON
   // =========================
 
-  equals(user: DBUser): boolean {
+  equals(user: DBUserEntity): boolean {
     return this.email === user.email;
   }
 
@@ -151,17 +137,17 @@ export class DBUser extends Entity<DBUserProps>{
       id: this.id,
       email: this._email,
       createdAt: this._createdAt,
-      updatedAt: this._updatedAt
+      updatedAt: this._updatedAt,
       // ❌ password intentionally excluded
     };
   }
 }
-export class CreateUserEntity extends Entity<CreateUserProps>{
+export class CreateUserEntity extends Entity<CreateUserProps> {
   private _email: string;
   private _password: string;
 
   constructor(props: CreateUserProps) {
-    super()
+    super();
 
     this._email = this.validateAndNormalizeEmail(props.email);
     this._password = this.validatePassword(props.password);
@@ -173,9 +159,9 @@ export class CreateUserEntity extends Entity<CreateUserProps>{
   // GETTERS (READ-ONLY ACCESS)
   // =========================
 
-//   get id(): string {
-//     return this._id;
-//   }
+  //   get id(): string {
+  //     return this._id;
+  //   }
 
   get email(): string {
     return this._email;
@@ -190,7 +176,6 @@ export class CreateUserEntity extends Entity<CreateUserProps>{
   // =========================
 
   private validate() {
-    
     if (!this._email) {
       throw new Error("Email is required");
     }
@@ -207,8 +192,7 @@ export class CreateUserEntity extends Entity<CreateUserProps>{
 
     const normalized = email.trim().toLowerCase();
 
-    const emailRegex =
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(normalized)) {
       throw new Error("Invalid email format");
@@ -261,7 +245,7 @@ export class CreateUserEntity extends Entity<CreateUserProps>{
   // COMPARISON
   // =========================
 
-  equals(user: DBUser): boolean {
+  equals(user: DBUserEntity): boolean {
     return this.email === user.email;
   }
 

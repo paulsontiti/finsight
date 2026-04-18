@@ -1,5 +1,5 @@
 
-import type { ITokenService, IUserRepository, RegisterLoginUserDTO } from "../../shared/types/index.js";
+import { Role, type ITokenService, type IUserRepository, type RegisterLoginUserDTO } from "../../shared/types/index.js";
 import type { IHashService } from "../../domain/repositories/hash-service.repository.js";
 import { InvalidCredentialsError, UserNotFoundError } from "../../shared/erors/domain.errors.js";
 
@@ -34,7 +34,8 @@ export class LoginUserUseCase {
 
     // 4. Generate token
     const token = this.tokenService.sign({
-      user:{userId: user.id}
+      user:{userId: user.id},
+      role: user.role || Role.USER
     });
 
     // 5. Return response

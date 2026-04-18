@@ -1,4 +1,4 @@
-import { CreateUserEntity, DBUser } from "../../domain/entities/user.entity.js";
+import { CreateUserEntity, DBUserEntity } from "../../domain/entities/user.entity.js";
 import type { PrismaUserRepository } from "../../domain/repositories/user.repository.js";
 import { AppError } from "../../shared/erors/base.error.js";
 import {
@@ -63,7 +63,7 @@ export class RegisterUserUseCase implements UseCase<any, any> {
       // =========================
 
       
-      const dbUser:DBUser = new DBUser({email:savedUser.email,password:savedUser.password,createdAt:savedUser.createdAt,updatedAt:savedUser.updatedAt,id:savedUser.id})
+      const dbUser:DBUserEntity = new DBUserEntity({email:savedUser.email,password:savedUser.password,createdAt:savedUser.createdAt,updatedAt:savedUser.updatedAt,id:savedUser.id})
 
       return dbUser.toJSON();
     } catch (err: any) {

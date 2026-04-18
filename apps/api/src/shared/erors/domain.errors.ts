@@ -24,6 +24,11 @@ export class InvalidCredentialsError extends AppError {
     super(message, 401);
   }
 }
+export class UnauthorizedError extends AppError {
+  constructor(message: string = "Unauthorized") {
+    super(message, 403);
+  }
+}
 
 export class InsufficientBalanceError extends AppError {
   constructor() {

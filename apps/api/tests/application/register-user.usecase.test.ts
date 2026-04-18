@@ -15,6 +15,7 @@ describe("RegisterUserUseCase", () => {
       password: "Password123!"
     });
 
+    //console.log(user)
     expect(user).toBeDefined();
   });
 

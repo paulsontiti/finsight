@@ -45,34 +45,46 @@ enum Role {
 //////////////////////
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
-  password  String
-  isVerified Boolean @default(false)
-  role      Role     @default(APPUSER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  email      String   @unique
+  password   String
+  isVerified Boolean  @default(false)
+  role       Role     @default(APPUSER)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // Relations
-  wallet        Wallet?
-  savings       SavingsPlan[]
-  refreshTokens RefreshToken[]
-  verificationToken VerificationToken?
+  wallet             Wallet?
+  savings            SavingsPlan[]
+  refreshTokens      RefreshToken[]
+  verificationToken  VerificationToken?
+  passwordResetToken PasswordResetToken?
+}
+
+//////////////////////
+// PasswordResetToken
+//////////////////////
+model PasswordResetToken {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique
+  token     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 //////////////////////
 // VerificationToken
 //////////////////////
 model VerificationToken {
-id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String @unique
-  token     String 
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique
+  token     String
   expiresAt DateTime
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
-
-
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 //////////////////////

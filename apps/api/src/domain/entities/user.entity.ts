@@ -51,7 +51,7 @@ export class DBUserEntity extends Entity<DBUserProps> {
     return this._updatedAt;
   }
 
-    get isVerified(): boolean {
+  get isVerified(): boolean {
     return this._isVerified;
   }
 
@@ -123,6 +123,9 @@ export class DBUserEntity extends Entity<DBUserProps> {
   markVerified() {
     this._isVerified = true;
   }
+  setPassword(hashedPassword: string) {
+    this._password = hashedPassword;
+  }
 
   updateEmail(newEmail: string) {
     this._email = this.validateAndNormalizeEmail(newEmail);
@@ -151,7 +154,7 @@ export class DBUserEntity extends Entity<DBUserProps> {
       createdAt: this._createdAt,
       updatedAt: this._updatedAt,
       role: this.role,
-      isverified: this.isVerified
+      isverified: this.isVerified,
       // ❌ password intentionally excluded
     };
   }

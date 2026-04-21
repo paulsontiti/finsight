@@ -1,11 +1,11 @@
-import type { EmailVerificaionProp, IVerificationTokenRepository } from "../../shared/types/index.js";
-import type { VerificationTokenGenerator } from "../../shared/utils/verification-token.generator.js";
+import type { EmailVerificaionProp, IGenerator, ITokenRepository } from "../../shared/types/index.js";
+
 import type { UseCase } from "../interfaces/useCase.js";
 
 export class SendVerificationUseCase implements UseCase<EmailVerificaionProp,{success:boolean}>{
   constructor(
-    private readonly repo: IVerificationTokenRepository,
-    private readonly tokenGenerator: VerificationTokenGenerator,
+    private readonly repo: ITokenRepository,
+    private readonly tokenGenerator: IGenerator,
     private readonly mailer: any
   ) {}
 

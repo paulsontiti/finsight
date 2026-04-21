@@ -25,6 +25,10 @@ export interface ITokenService {
   verify(token: string): string;
 }
 
+export interface IGenerator {
+  generate(): string;
+}
+
 export interface IUserRepository extends Repository<DBUserProps> {
   findByEmail(email: string): Promise<DBUserProps | null>;
   update(data: any): Promise<void>;
@@ -97,7 +101,7 @@ export interface IRefreshTokenRepository {
   deleteByUserId(userId: string): Promise<void>;
 }
 
-export interface IVerificationTokenRepository {
+export interface ITokenRepository {
   create(data: {
     userId: string;
     token: string;

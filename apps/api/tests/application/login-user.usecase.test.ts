@@ -65,6 +65,7 @@ describe("LoginUserUseCase", () => {
       password: "Password123!"
     });
 
+    
     expect(result.accessToken).toBe("token");
   });
 

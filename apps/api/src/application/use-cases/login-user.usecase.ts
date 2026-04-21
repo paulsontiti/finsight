@@ -1,24 +1,27 @@
 import {
   type IHashService,
+  type IRefreshTokenRepository,
   type ITokenService,
   type IUserRepository,
   type RegisterLoginUserDTO,
+  type UserApiResponse,
 } from "../../shared/types/index.js";
 import {
   InvalidCredentialsError,
   UserNotFoundError,
 } from "../../shared/erors/domain.errors.js";
-import { Role } from "../../../generated/prisma/enums.js";
 import type { UseCase } from "../interfaces/useCase.js";
+import type { RefreshTokenService } from "../../services/refresh-token.service.js";
 
 export class LoginUserUseCase implements UseCase<
   RegisterLoginUserDTO,
-  { token: string; user: { id: string; email: string } }
+  UserApiResponse
 > {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly hashService: IHashService,
     private readonly tokenService: ITokenService,
+    private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
   async execute(data: RegisterLoginUserDTO) {
@@ -43,18 +46,31 @@ export class LoginUserUseCase implements UseCase<
     }
 
     // 4. Generate token
-    const token = this.tokenService.sign({
-      user: { userId: user.id },
-      role: user.role || Role.APPUSER,
-    });
+
+    const accessToken = this.tokenService.signAccessToken(
+      user.id
+    );
+
+    const refreshToken = this.tokenService.signRefreshToken(user.id,
+    );
+
+    await this.refreshTokenService.create(
+      user.id,
+      refreshToken,
+      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    );
 
     // 5. Return response
-    return {
-      token,
+    const userApiRes: UserApiResponse = {
+      accessToken,
+      refreshToken,
       user: {
         id: user.id,
         email: user.email,
+        role: user.role,
       },
     };
+
+    return userApiRes;
   }
 }

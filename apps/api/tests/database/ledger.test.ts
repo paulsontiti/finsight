@@ -1,9 +1,8 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import prisma from "../../src/prisma.js";
-import "../setup/cleanDB.js"
+import "../setup/cleanDB.js";
 
 describe("Ledger Entries", () => {
-
   beforeEach(async () => {
     // await prisma.ledgerEntry.deleteMany();
   });
@@ -12,18 +11,21 @@ describe("Ledger Entries", () => {
     const debit = await prisma.ledgerEntry.create({
       data: {
         amount: 100,
-        type: "DEBIT",walletId:"1234",transactionId:"123"
+        type: "DEBIT",
+        walletId: "1234",
+        transactionId: "123",
       },
     });
 
     const credit = await prisma.ledgerEntry.create({
       data: {
         amount: 100,
-        type: "CREDIT",walletId:"1234",transactionId:"123"
-      }
+        type: "CREDIT",
+        walletId: "1234",
+        transactionId: "123",
+      },
     });
-
+    //console.log(debit)
     expect(debit.amount).toBe(credit.amount);
   });
-
 });

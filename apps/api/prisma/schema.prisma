@@ -53,8 +53,26 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  wallet  Wallet?
-  savings SavingsPlan[]
+  wallet        Wallet?
+  savings       SavingsPlan[]
+  refreshTokens RefreshToken[]
+}
+
+//////////////////////
+// RefreshToken
+//////////////////////
+
+model RefreshToken {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String
+  hashedToken String
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 //////////////////////

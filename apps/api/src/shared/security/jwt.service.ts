@@ -4,9 +4,15 @@ import type { ITokenService, UserPayload } from "../types/index.js";
 export class JwtService implements ITokenService {
   constructor(private readonly secret: string) {}
 
-  sign(payload: UserPayload): string {
+  signAccessToken(payload: UserPayload): string {
     return jwt.sign(payload, this.secret, {
-      expiresIn: "1d"
+      expiresIn: "15m"
+    });
+  }
+
+  signRefreshToken(payload: UserPayload): string {
+    return jwt.sign(payload, this.secret, {
+      expiresIn: "7d"
     });
   }
 

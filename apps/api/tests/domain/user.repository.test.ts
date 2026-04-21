@@ -9,14 +9,6 @@ const user = {
     };
 
 describe("UserRepository - Create", () => {
-
-
-  beforeEach(async () => {
-    //await prisma.user.deleteMany();
-    
-    
-  });
-
   it("should create a user", async () => {
     
 

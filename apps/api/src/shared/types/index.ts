@@ -6,13 +6,20 @@ export type RegisterLoginUserDTO = {
   password: string;
 };
 
-export type UserPayload = {
-  user: { userId: string };
-  role: Role;
+export interface UserPayload {
+  user: { userId: string,role:string };
+}
+
+export type UserApiResponse = {
+  accessToken: string;
+  refreshToken: string;
+  user: { id: string; email: string; role: string };
 };
+
 export interface ITokenService {
-  sign(payload: UserPayload): string;
-  verify(token: string): UserPayload;
+  signAccessToken(payload: string): string;
+  signRefreshToken(payload: string): string;
+  verify(token: string): string;
 }
 
 export interface IUserRepository extends Repository<DBUserProps> {
@@ -38,6 +45,20 @@ export interface DBUserProps {
   role: Role;
 }
 
+export interface CreateRefreshTokenProps {
+  userId: string;
+  hashedToken: string;
+  expiresAt: Date;
+}
+
+export interface DBRefreshTokenProps {
+  id: string;
+  userId: string;
+  hashedToken: string;
+  expiresAt: Date;
+  createdAt: Date;
+}
+
 export interface DBApiKeyProps {
   id: string;
   hashedKey: string;
@@ -51,7 +72,6 @@ export interface CreateApiKeyProps {
 
 export interface IApiKeyRepository extends Repository<CreateApiKeyProps> {
   findByKey(key: string): Promise<CreateApiKeyProps>;
-  
 }
 export interface IHashService {
   hash(password: string): Promise<string>;
@@ -61,4 +81,13 @@ export interface IHashService {
 export interface Repository<T> {
   create(entity: T): Promise<T>;
   findById(id: string): Promise<T | null>;
+}
+export interface IRefreshTokenRepository {
+  create(data: CreateRefreshTokenProps): Promise<void>;
+
+  findByUserId(userId: string): Promise<DBRefreshTokenProps[]>;
+
+  delete(id: string): Promise<void>;
+
+  deleteByUserId(userId: string): Promise<void>;
 }

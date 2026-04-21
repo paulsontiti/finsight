@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeAll } from "vitest";
 import { LoginUserUseCase } from "../../src/application/use-cases/login-user.usecase.js";
-import { Role } from "../../generated/prisma/enums.js";
 import { RefreshTokenService } from "../../src/services/refresh-token.service.js";
 
 import "../setup/cleanDB.js"

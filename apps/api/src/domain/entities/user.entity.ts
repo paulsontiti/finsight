@@ -1,5 +1,8 @@
-import  { Role } from "../../../generated/prisma/enums.js";
-import { type CreateUserProps, type DBUserProps} from "../../shared/types/index.js";
+import { Role } from "../../../generated/prisma/enums.js";
+import {
+  type CreateUserProps,
+  type DBUserProps,
+} from "../../shared/types/index.js";
 import { Entity } from "./entity.js";
 
 export class DBUserEntity extends Entity<DBUserProps> {
@@ -9,17 +12,18 @@ export class DBUserEntity extends Entity<DBUserProps> {
   private readonly _createdAt: Date;
   private readonly _updatedAt: Date;
   private _role: Role;
+  private _isVerified: boolean;
 
   constructor(props: DBUserProps) {
     super();
     this._role = props.role || Role.APPUSER;
 
     this._email = this.validateAndNormalizeEmail(props.email);
-    this._password = this.validatePassword(props.password);
+    this._password = this.validatePassword(props.password || "");
 
     this._createdAt = props.createdAt || new Date();
     this._updatedAt = props.updatedAt || new Date();
-
+    this._isVerified = false;
     this.validate();
   }
 
@@ -45,6 +49,10 @@ export class DBUserEntity extends Entity<DBUserProps> {
 
   get updateAt(): Date {
     return this._updatedAt;
+  }
+
+    get isVerified(): boolean {
+    return this._isVerified;
   }
 
   // =========================
@@ -112,6 +120,9 @@ export class DBUserEntity extends Entity<DBUserProps> {
   // =========================
   // BEHAVIOR METHODS
   // =========================
+  markVerified() {
+    this._isVerified = true;
+  }
 
   updateEmail(newEmail: string) {
     this._email = this.validateAndNormalizeEmail(newEmail);
@@ -138,7 +149,9 @@ export class DBUserEntity extends Entity<DBUserProps> {
       id: this.id,
       email: this._email,
       createdAt: this._createdAt,
-      updatedAt: this._updatedAt,role:this.role
+      updatedAt: this._updatedAt,
+      role: this.role,
+      isverified: this.isVerified
       // ❌ password intentionally excluded
     };
   }

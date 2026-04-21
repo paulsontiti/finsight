@@ -50,6 +50,12 @@ path.join(process.cwd(), "generated/prisma/query_engine-windows.dll.node")
  */
 export type User = Prisma.UserModel
 /**
+ * Model VerificationToken
+ * ///////////////////
+ * ///////////////////
+ */
+export type VerificationToken = Prisma.VerificationTokenModel
+/**
  * Model RefreshToken
  * 
  */

@@ -48,6 +48,7 @@ model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String   @unique
   password  String
+  isVerified Boolean @default(false)
   role      Role     @default(APPUSER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -56,6 +57,22 @@ model User {
   wallet        Wallet?
   savings       SavingsPlan[]
   refreshTokens RefreshToken[]
+  verificationToken VerificationToken?
+}
+
+//////////////////////
+// VerificationToken
+//////////////////////
+model VerificationToken {
+id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String @unique
+  token     String 
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
+
+
 }
 
 //////////////////////

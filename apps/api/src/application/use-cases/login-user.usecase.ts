@@ -1,6 +1,5 @@
 import {
   type IHashService,
-  type IRefreshTokenRepository,
   type ITokenService,
   type IUserRepository,
   type RegisterLoginUserDTO,
@@ -38,7 +37,7 @@ export class LoginUserUseCase implements UseCase<
     // 3. Validate password
     const isValid = await this.hashService.compare(
       data.password,
-      user.password,
+      user.password as string,
     );
 
     if (!isValid) {
@@ -68,6 +67,9 @@ export class LoginUserUseCase implements UseCase<
         id: user.id,
         email: user.email,
         role: user.role,
+        isVerified: user.isVerified,
+        createdAt: user.createdAt,
+        updatedAt:user.updatedAt
       },
     };
 

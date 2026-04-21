@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import prisma from "../../src/prisma.js";
 import "../setup/cleanDB.js"
+import { log } from "console";
 
 describe("Relations", () => {
 
@@ -16,7 +17,7 @@ describe("Relations", () => {
       include: { wallet: true }
     });
 
-    expect(user.wallet).toBeDefined();
+ expect(user.wallet).toBeDefined();
   });
 
 });

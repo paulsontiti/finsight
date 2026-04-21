@@ -1,19 +1,22 @@
 import type { Request } from "express";
 import type { Role } from "../../../generated/prisma/enums.js";
 
+
+export type EmailVerificaionProp = { userId: string; email: string };
+
 export type RegisterLoginUserDTO = {
   email: string;
   password: string;
 };
 
 export interface UserPayload {
-  user: { userId: string,role:string };
+  user: { userId: string; role: string };
 }
 
 export type UserApiResponse = {
   accessToken: string;
   refreshToken: string;
-  user: { id: string; email: string; role: string };
+  user: DBUserProps;
 };
 
 export interface ITokenService {
@@ -24,6 +27,7 @@ export interface ITokenService {
 
 export interface IUserRepository extends Repository<DBUserProps> {
   findByEmail(email: string): Promise<DBUserProps | null>;
+  update(data: any): Promise<void>;
 }
 
 export interface AuthRequest extends Request {
@@ -39,10 +43,11 @@ export interface CreateUserProps {
 export interface DBUserProps {
   id: string;
   email: string;
-  password: string;
+  password?: string;
   createdAt: Date;
   updatedAt: Date;
   role: Role;
+  isVerified:Boolean
 }
 
 export interface CreateRefreshTokenProps {
@@ -90,4 +95,25 @@ export interface IRefreshTokenRepository {
   delete(id: string): Promise<void>;
 
   deleteByUserId(userId: string): Promise<void>;
+}
+
+export interface IVerificationTokenRepository {
+  create(data: {
+    userId: string;
+    token: string;
+    expiresAt: Date;
+  }): Promise<void>;
+
+  find(token: string): Promise<{
+    id: string;
+    userId: string;
+    token: string;
+    expiresAt: Date;
+  } | null>;
+
+  delete(id: string): Promise<void>;
+}
+
+export interface IMailer {
+  send(data: { to: string; subject: string; body: string }): Promise<void>;
 }

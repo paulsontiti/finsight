@@ -1,4 +1,4 @@
-import jwt, { type JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import type { ITokenService, UserPayload } from "../types/index.js";
 
 export class JwtService implements ITokenService {

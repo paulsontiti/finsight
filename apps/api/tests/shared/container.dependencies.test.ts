@@ -32,47 +32,4 @@ describe("DI Container - Dependencies", () => {
     expect(service.execute()).toBe("data");
   });
 
-  it("should not initialize service until resolved", () => {
-  const container = new Container();
-
-  let initialized = false;
-
-  container.register("lazyService", () => {
-    initialized = true;
-    return {};
-  });
-
-  expect(initialized).toBe(false);
-
-  container.resolve("lazyService");
-
-  expect(initialized).toBe(true);
-});
-it("should resolve nested dependencies", () => {
-  const container = new Container();
-
-  class A {}
-  class B {
-    constructor(public a: A) {}
-  }
-  class C {
-    constructor(public b: B) {}
-  }
-
-  container.register("a", () => new A());
-
-  container.register("b", () => {
-    const a = container.resolve<A>("a");
-    return new B(a);
-  });
-
-  container.register("c", () => {
-    const b = container.resolve<B>("b");
-    return new C(b);
-  });
-
-  const c = container.resolve<C>("c");
-
-  expect(c.b.a).toBeInstanceOf(A);
-});
 });

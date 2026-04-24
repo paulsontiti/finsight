@@ -1,8 +1,8 @@
 import prisma from "../../prisma.js";
-import type { IVerificationTokenRepository } from "../../shared/types/index.js";
+import type { ITokenRepository } from "../../shared/types/index.js";
 
 export class PrismaVerificationTokenRepository
-  implements IVerificationTokenRepository
+  implements ITokenRepository
 {
   async create(data: {
     userId: string;

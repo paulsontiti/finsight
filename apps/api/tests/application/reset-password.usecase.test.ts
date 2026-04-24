@@ -1,42 +1,40 @@
 import { describe, expect, it, vi } from "vitest";
-import { ResetPasswordUseCase } from "../../src/application/use-cases/reset-password.usecase.js";
+import { ResetPasswordUseCase } from "../../src/application/use-cases/reset-password.usecase";
 
+describe("Reset Password Usecase", () => {
+  it("should reset password successfully", async () => {
+    const tokenRepo = {
+      find: vi.fn().mockResolvedValue({
+        userId: "1",
+        expiresAt: new Date(Date.now() + 10000),
+        id: "t1",
+      }),
+      delete: vi.fn(),
+    };
 
-describe("Reset Password",()=>{
+    const user = {
+      setPassword: vi.fn(),
+    };
 
-    it("should reset password successfully", async () => {
-  const tokenRepo = {
-    find: vi.fn().mockResolvedValue({
-      userId: "1",
-      expiresAt: new Date(Date.now() + 10000),
-      id: "t1"
-    }),
-    delete: vi.fn()
-  };
+    const userRepo = {
+      findById: vi.fn().mockResolvedValue(user),
+      update: vi.fn(),
+    };
 
-  const user = {
-    setPassword: vi.fn()
-  };
+    const hashService = {
+      hash: vi.fn().mockResolvedValue("hashed"),
+    };
 
-  const userRepo = {
-    findById: vi.fn().mockResolvedValue(user),
-    update: vi.fn()
-  };
+    const useCase = new ResetPasswordUseCase(
+      tokenRepo as any,
+      userRepo as any,
+      hashService as any,
+    );
 
-  const hashService = {
-    hash: vi.fn().mockResolvedValue("hashed")
-  };
+    await useCase.execute({ token: "token", newPassword: "newPass" });
 
-  const useCase = new ResetPasswordUseCase(
-    tokenRepo as any,
-    userRepo as any,
-    hashService as any
-  );
-
-  await useCase.execute({token:"token", newPassword:"pass"});
-
-  expect(userRepo.update).toHaveBeenCalled();
-});
+    expect(userRepo.update).toHaveBeenCalled();
+  });
 
 it("should throw if token not found", async () => {
   const tokenRepo = {
@@ -49,7 +47,7 @@ it("should throw if token not found", async () => {
     {} as any
   );
 
-  await expect(useCase.execute({token:"token", newPassword:"pass"}))
+  await expect(useCase.execute({token:"bad", newPassword:"pass"}))
     .rejects.toThrow();
 });
 
@@ -153,5 +151,4 @@ it("should throw if user not found", async () => {
     .rejects.toThrow();
 });
 
-
-})
+});

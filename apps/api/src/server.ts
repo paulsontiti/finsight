@@ -5,15 +5,16 @@ import { container } from "./shared/container/index.js";
 
 dotenv.config();
 
+//enforce required envs at startup
 const config = container.resolve<any>("configService");
 const requiredEnv = ["DATABASE_URL", "JWT_SECRET", "PORT"];
-
 requiredEnv.forEach((key) => {
   config.get(key);
   // if (!process.env[key]) {
   //   throw new Error(`Missing required env: ${key}`);
   // }
 });
+
 const PORT = config.get("PORT");
 
 // Fetch all users with their posts

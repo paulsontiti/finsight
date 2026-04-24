@@ -1,120 +1,72 @@
-import { describe, it, expect, vi, beforeAll } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterAll } from "vitest";
+import prisma from "../../src/prisma";
 import { LoginUserUseCase } from "../../src/application/use-cases/login-user.usecase.js";
-import { RefreshTokenService } from "../../src/services/refresh-token.service.js";
-
-import "../setup/cleanDB.js"
-
-
 
 describe("LoginUserUseCase", () => {
+  beforeEach(async () => {
+    await prisma.ledgerEntry.deleteMany();
+    await prisma.transaction.deleteMany();
+    await prisma.wallet.deleteMany();
+    await prisma.user.deleteMany();
+  }, 100000);
 
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
   it("should login user successfully", async () => {
     const repo = {
       findByEmail: vi.fn().mockResolvedValue({
         id: "1",
         email: "test@mail.com",
-        password: "hashed"
-      })
+        password: "hashed",
+      }),
     };
 
     const hashService = {
       compare: vi.fn().mockResolvedValue(true),
-      hash: vi.fn().mockResolvedValue("hashed")
     };
 
     const tokenService = {
       signAccessToken: vi.fn().mockReturnValue("token"),
-      signRefreshToken: vi.fn().mockReturnValue("refreshToken"),
+      signRefreshToken: vi.fn().mockReturnValue("refresh-token"),
     };
 
-       const refreshRepo = {
-      create: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      findByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      deleteByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      delete: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
+    const refreshToken = {
+      create: vi.fn(),
     };
-
-        const refreshTokenService = new RefreshTokenService(
-      refreshRepo,
-      hashService,
-    );
     const useCase = new LoginUserUseCase(
       repo as any,
       hashService as any,
-      tokenService as any,refreshTokenService as any
+      tokenService as any,
+      refreshToken as any,
     );
 
     const result = await useCase.execute({
       email: "test@mail.com",
-      password: "Password123!"
+      password: "Password123!",
     });
 
-    
     expect(result.accessToken).toBe("token");
   });
 
- 
   it("should throw if user does not exist", async () => {
     const repo = {
       findByEmail: vi.fn().mockResolvedValue(null),
     };
 
-    const hashService = {
-      compare: vi.fn(),
-      hash: vi.fn().mockResolvedValue("hashed"),
-    };
+    const hashService = { compare: vi.fn() };
     const tokenService = {
-      signAccessToken: vi.fn().mockReturnValue("token"),
-      signRefreshToken: vi.fn().mockReturnValue("refreshToken"),
+      signAccessToken: vi.fn(),
+      signRefreshToken: vi.fn(),
     };
-    const refreshRepo = {
-      create: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      findByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      deleteByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      delete: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
+    const refreshToken = {
+      create: vi.fn(),
     };
-
-    const refreshTokenService = new RefreshTokenService(
-      refreshRepo,
-      hashService,
-    );
     const useCase = new LoginUserUseCase(
       repo as any,
       hashService as any,
       tokenService as any,
-      refreshTokenService as any,
+      refreshToken as any,
     );
 
     await expect(
@@ -135,44 +87,21 @@ describe("LoginUserUseCase", () => {
     };
 
     const hashService = {
-      compare: vi.fn(),
-      hash: vi.fn().mockResolvedValue("hashed"),
+      compare: vi.fn().mockResolvedValue(false),
     };
+
     const tokenService = {
-      signAccessToken: vi.fn().mockReturnValue("token"),
-      signRefreshToken: vi.fn().mockReturnValue("refreshToken"),
+      signAccessToken: vi.fn(),
+      signRefreshToken: vi.fn(),
     };
-    const refreshRepo = {
-      create: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      findByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      deleteByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      delete: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
+    const refreshToken = {
+      create: vi.fn(),
     };
-    const refreshTokenService = new RefreshTokenService(
-      refreshRepo,
-      hashService,
-    );
     const useCase = new LoginUserUseCase(
       repo as any,
       hashService as any,
       tokenService as any,
-      refreshTokenService as any,
+      refreshToken as any,
     );
 
     await expect(
@@ -182,7 +111,6 @@ describe("LoginUserUseCase", () => {
       }),
     ).rejects.toThrow();
   });
-
   it("should compare password with hash", async () => {
     const repo = {
       findByEmail: vi.fn().mockResolvedValue({
@@ -194,45 +122,20 @@ describe("LoginUserUseCase", () => {
 
     const hashService = {
       compare: vi.fn().mockResolvedValue(true),
-      hash: vi.fn().mockResolvedValue("hashed"),
     };
 
     const tokenService = {
-      signAccessToken: vi.fn().mockReturnValue("token"),
-      signRefreshToken: vi.fn().mockReturnValue("refreshToken"),
+      signAccessToken: vi.fn(),
+      signRefreshToken: vi.fn(),
     };
-
-    const refreshRepo = {
-      create: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      findByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      deleteByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      delete: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
+    const refreshToken = {
+      create: vi.fn(),
     };
-    const refreshTokenService = new RefreshTokenService(
-      refreshRepo,
-      hashService,
-    );
     const useCase = new LoginUserUseCase(
       repo as any,
       hashService as any,
       tokenService as any,
-      refreshTokenService as any,
+      refreshToken as any,
     );
 
     await useCase.execute({
@@ -254,45 +157,20 @@ describe("LoginUserUseCase", () => {
 
     const hashService = {
       compare: vi.fn().mockResolvedValue(true),
-      hash: vi.fn().mockResolvedValue("hashed"),
     };
 
     const tokenService = {
-      signAccessToken: vi.fn().mockReturnValue("token"),
-      signRefreshToken: vi.fn().mockReturnValue("refreshToken"),
+      signAccessToken: vi.fn(),
+      signRefreshToken: vi.fn(),
     };
-
-    const refreshRepo = {
-      create: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      findByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      deleteByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      delete: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
+    const refreshToken = {
+      create: vi.fn(),
     };
-    const refreshTokenService = new RefreshTokenService(
-      refreshRepo,
-      hashService,
-    );
     const useCase = new LoginUserUseCase(
       repo as any,
       hashService as any,
       tokenService as any,
-      refreshTokenService as any,
+      refreshToken as any,
     );
 
     await useCase.execute({
@@ -300,7 +178,9 @@ describe("LoginUserUseCase", () => {
       password: "Password123!",
     });
 
-    expect(tokenService.signAccessToken).toHaveBeenCalledWith("1" );
+    expect(tokenService.signAccessToken).toHaveBeenCalledWith({
+      userId: "1",
+    });
   });
 
   it("should normalize email before lookup", async () => {
@@ -314,45 +194,20 @@ describe("LoginUserUseCase", () => {
 
     const hashService = {
       compare: vi.fn().mockResolvedValue(true),
-      hash: vi.fn().mockResolvedValue("hashed"),
     };
 
     const tokenService = {
-      signAccessToken: vi.fn().mockReturnValue("token"),
-      signRefreshToken: vi.fn().mockReturnValue("refreshToken"),
+      signAccessToken: vi.fn(),
+      signRefreshToken: vi.fn(),
     };
-
-    const refreshRepo = {
-      create: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      findByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      deleteByUserId: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
-      delete: vi.fn().mockResolvedValue({
-        id: "1",
-        email: "test@mail.com",
-        password: "hashed",
-      }),
+    const refreshToken = {
+      create: vi.fn(),
     };
-    const refreshTokenService = new RefreshTokenService(
-      refreshRepo,
-      hashService,
-    );
     const useCase = new LoginUserUseCase(
       repo as any,
       hashService as any,
       tokenService as any,
-      refreshTokenService as any,
+      refreshToken as any,
     );
 
     await useCase.execute({

@@ -1,9 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { UserAlreadyExistsError } from "../../src/shared/erors/domain.errors.js";
 import { RegisterUserUseCase } from "../../src/application/use-cases/register-user.usecase.js";
-import prisma from "../../src/prisma.js";
-import { AuditLogger } from "../../src/shared/logger/audit.logger.js";
+import type { IHashService, IUserRepository } from "../../src/shared/types/index.js";
+import { Role } from "../../generated/prisma/enums.js";
+
 describe("Error System", () => {
+
   it("should create domain error correctly", () => {
     const error = new UserAlreadyExistsError();
 
@@ -12,26 +14,24 @@ describe("Error System", () => {
   });
 
   it("should throw error if user exists", async () => {
-    const useCase = new RegisterUserUseCase({
-      findByEmail: async (email:string) => ({
-        id: "1",
-        email: "test@mail.com",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        password: "123",
-      }),
-      create: async () => ({
-        id: "1",
-        email: "test@mail.com",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        password: "123",
-      }),
-      findById: async () => null,
-    },new AuditLogger());
+    const user = { id: "1",email:"test@mail.com",password:"hashed",createdAt:new Date(),updatedAt:new Date(),isVerified:false,role:Role.APPUSER }
 
-    await expect(
-      useCase.execute({ email: "test@mail.com", password: "123" }),
-    ).rejects.toThrow("User already exists");
-  });
+    const repo:IUserRepository = {
+        create: async(data:any) => data,
+    findByEmail: async () => user,
+    update:async(data:any)=>{},
+    findById:async(id:string)=> user
+    
+  }
+    const hashService:IHashService ={
+        hash:async(item:string)=>"hashed",
+        compare:async(a:string,b:string) => true
+    }
+  const useCase = new RegisterUserUseCase(repo,hashService,);
+
+  await expect(
+    useCase.execute({ email: "test@mail.com", password: "Password123!" })
+  ).rejects.toThrow("User already exists");
+});
+
 });

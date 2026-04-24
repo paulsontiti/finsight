@@ -11,6 +11,8 @@ import {
 } from "../../shared/erors/domain.errors.js";
 import type { UseCase } from "../interfaces/useCase.js";
 import type { RefreshTokenService } from "../../services/refresh-token.service.js";
+import { DatabaseError } from "../../shared/erors/system.error.js";
+import { CreateUserEntity } from "../../domain/entities/user.entity.js";
 
 export class LoginUserUseCase implements UseCase<
   RegisterLoginUserDTO,
@@ -24,11 +26,21 @@ export class LoginUserUseCase implements UseCase<
   ) {}
 
   async execute(data: RegisterLoginUserDTO) {
+    if (!data.email || !data.password) {
+      throw new InvalidCredentialsError();
+    }
+
+    let loginUserEntity;
+    try{
+      loginUserEntity = new CreateUserEntity(data)
+    }catch(err:any){
+      throw new InvalidCredentialsError()
+    }
     // 1. Normalize email
-    const email = data.email.trim().toLowerCase();
+    //const email = data.email.trim().toLowerCase();
 
     // 2. Find user
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(loginUserEntity.email);
 
     if (!user) {
       throw new UserNotFoundError();
@@ -46,18 +58,25 @@ export class LoginUserUseCase implements UseCase<
 
     // 4. Generate token
 
-    const accessToken = this.tokenService.signAccessToken(
-      user.id
-    );
+    const accessToken = this.tokenService.signAccessToken({
+      userId: user.id,
+      role: user.role,
+    });
 
-    const refreshToken = this.tokenService.signRefreshToken(user.id,
-    );
+    const refreshToken = this.tokenService.signRefreshToken({
+      userId: user.id,
+      role: user.role,
+    });
 
-    await this.refreshTokenService.create(
-      user.id,
-      refreshToken,
-      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    );
+    try {
+      await this.refreshTokenService.create(
+        user.id,
+        refreshToken,
+        new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      );
+    } catch (err: any) {
+      throw new DatabaseError(err.message)
+    }
 
     // 5. Return response
     const userApiRes: UserApiResponse = {
@@ -69,7 +88,7 @@ export class LoginUserUseCase implements UseCase<
         role: user.role,
         isVerified: user.isVerified,
         createdAt: user.createdAt,
-        updatedAt:user.updatedAt
+        updatedAt: user.updatedAt,
       },
     };
 

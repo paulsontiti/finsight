@@ -1,31 +1,34 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterAll } from "vitest";
 import prisma from "../../src/prisma.js";
-import "../setup/cleanDB.js"
 
 describe("Wallet Model", () => {
-
   let userId: string;
 
   beforeEach(async () => {
-    // await prisma.wallet.deleteMany();
-    // await prisma.user.deleteMany();
+    await prisma.ledgerEntry.deleteMany();
+    await prisma.transaction.deleteMany();
+    await prisma.wallet.deleteMany();
+    await prisma.user.deleteMany();
 
     const user = await prisma.user.create({
-      data: { email: "user@mail.com", password: "123" }
+      data: { email: "user@mail.com", password: "123" },
     });
 
     userId = user.id;
+  }, 1000000);
+
+  afterAll(async () => {
+    await prisma.$disconnect();
   });
 
   it("should create a wallet for user", async () => {
     const wallet = await prisma.wallet.create({
       data: {
         userId,
-        balance: 0
-      }
+        balance: 0,
+      },
     });
 
-    //console.log(wallet)
     expect(wallet.userId).toBe(userId);
   });
 
@@ -33,11 +36,10 @@ describe("Wallet Model", () => {
     const wallet = await prisma.wallet.create({
       data: {
         userId,
-        balance: 0
-      }
+        balance: 0,
+      },
     });
 
     expect(wallet.balance).toBeGreaterThanOrEqual(0);
   });
-
 });

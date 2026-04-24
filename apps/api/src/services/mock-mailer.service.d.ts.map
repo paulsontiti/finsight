@@ -1,0 +1,1 @@
+{"version":3,"file":"mock-mailer.service.d.ts","sourceRoot":"","sources":["mock-mailer.service.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,OAAO,EAAE,MAAM,0BAA0B,CAAC;AAExD,qBAAa,UAAW,YAAW,OAAO;IAClC,IAAI,CAAC,IAAI,EAAE;QACf,EAAE,EAAE,MAAM,CAAC;QACX,OAAO,EAAE,MAAM,CAAC;QAChB,IAAI,EAAE,MAAM,CAAC;KACd,GAAG,OAAO,CAAC,IAAI,CAAC;CAGlB"}

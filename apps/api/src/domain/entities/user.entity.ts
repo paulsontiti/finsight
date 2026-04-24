@@ -5,21 +5,18 @@ import {
 } from "../../shared/types/index.js";
 import { Entity } from "./entity.js";
 
-export class DBUserEntity extends Entity<DBUserProps> {
-  //private readonly _id: string;
+export class DBUserEntity extends Entity {
   private _email: string;
-  private _password: string;
   private readonly _createdAt: Date;
   private readonly _updatedAt: Date;
   private _role: Role;
   private _isVerified: boolean;
 
-  constructor(props: DBUserProps) {
+  constructor(props: any) {
     super();
     this._role = props.role || Role.APPUSER;
 
     this._email = this.validateAndNormalizeEmail(props.email);
-    this._password = this.validatePassword(props.password || "");
 
     this._createdAt = props.createdAt || new Date();
     this._updatedAt = props.updatedAt || new Date();
@@ -39,15 +36,11 @@ export class DBUserEntity extends Entity<DBUserProps> {
     return this._email;
   }
 
-  get password(): string {
-    return this._password;
-  }
-
   get createdAt(): Date {
     return this._createdAt;
   }
 
-  get updateAt(): Date {
+  get updatedAt(): Date {
     return this._updatedAt;
   }
 
@@ -67,10 +60,6 @@ export class DBUserEntity extends Entity<DBUserProps> {
     if (!this._email) {
       throw new Error("Email is required");
     }
-
-    if (!this._password) {
-      throw new Error("Password is required");
-    }
   }
 
   private validateAndNormalizeEmail(email: string): string {
@@ -89,50 +78,15 @@ export class DBUserEntity extends Entity<DBUserProps> {
     return normalized;
   }
 
-  private validatePassword(password: string): string {
-    if (!password || typeof password !== "string") {
-      throw new Error("Invalid password");
-    }
-
-    if (password.length < 8) {
-      throw new Error("Password must be at least 8 characters");
-    }
-
-    if (!/[A-Z]/.test(password)) {
-      throw new Error("Password must contain an uppercase letter");
-    }
-
-    if (!/[a-z]/.test(password)) {
-      throw new Error("Password must contain a lowercase letter");
-    }
-
-    if (!/[0-9]/.test(password)) {
-      throw new Error("Password must contain a number");
-    }
-
-    if (!/[!@#$%^&*]/.test(password)) {
-      throw new Error("Password must contain a special character");
-    }
-
-    return password;
-  }
-
   // =========================
   // BEHAVIOR METHODS
   // =========================
   markVerified() {
     this._isVerified = true;
   }
-  setPassword(hashedPassword: string) {
-    this._password = hashedPassword;
-  }
 
   updateEmail(newEmail: string) {
     this._email = this.validateAndNormalizeEmail(newEmail);
-  }
-
-  updatePassword(newPassword: string) {
-    this._password = this.validatePassword(newPassword);
   }
 
   // =========================
@@ -159,7 +113,7 @@ export class DBUserEntity extends Entity<DBUserProps> {
     };
   }
 }
-export class CreateUserEntity extends Entity<CreateUserProps> {
+export class CreateUserEntity extends Entity {
   private _email: string;
   private _password: string;
 
@@ -203,7 +157,7 @@ export class CreateUserEntity extends Entity<CreateUserProps> {
   }
 
   private validateAndNormalizeEmail(email: string): string {
-    if (!email || typeof email !== "string") {
+    if (!email || typeof email !== "string" || email.length > 120) {
       throw new Error("Invalid email");
     }
 
@@ -262,7 +216,7 @@ export class CreateUserEntity extends Entity<CreateUserProps> {
   // COMPARISON
   // =========================
 
-  equals(user: DBUserEntity): boolean {
+  equals(user: CreateUserEntity): boolean {
     return this.email === user.email;
   }
 

@@ -1,10 +1,14 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterAll } from "vitest";
 import prisma from "../../src/prisma.js";
-import "../setup/cleanDB.js";
 
 describe("Ledger Entries", () => {
+
   beforeEach(async () => {
-    // await prisma.ledgerEntry.deleteMany();
+    await prisma.ledgerEntry.deleteMany();
+  },100000);
+
+    afterAll(async () => {
+    await prisma.$disconnect();
   });
 
   it("should create debit and credit entries", async () => {
@@ -12,20 +16,20 @@ describe("Ledger Entries", () => {
       data: {
         amount: 100,
         type: "DEBIT",
-        walletId: "1234",
-        transactionId: "123",
-      },
+        transactionId:"123",
+        walletId:"123"
+      }
     });
 
     const credit = await prisma.ledgerEntry.create({
       data: {
         amount: 100,
-        type: "CREDIT",
-        walletId: "1234",
-        transactionId: "123",
-      },
+        type: "CREDIT", transactionId:"123",
+        walletId:"123"
+      }
     });
-    //console.log(debit)
+
     expect(debit.amount).toBe(credit.amount);
   });
+
 });

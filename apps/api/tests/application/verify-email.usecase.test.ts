@@ -1,7 +1,7 @@
-import { describe, expect, vi,it } from "vitest";
-import { VerifyEmailUseCase } from "../../src/application/use-cases/verify-email.usecase.js";
+import { describe, expect, it, vi } from "vitest";
+import {VerifyEmailUseCase} from "../../src/application/use-cases/verify-email.usecase"
 
-describe("Verify Email usecase",()=>{
+describe("Verify Email",()=>{
 
     it("should verify user successfully", async () => {
   const tokenRepo = {
@@ -89,8 +89,8 @@ it("should delete token after verification", async () => {
 });
 
 it("should mark user as verified", async () => {
-   const user = {
-//     markVerified: vi.fn()
+  const user = {
+    markVerified: vi.fn()
   };
 
   const tokenRepo = {

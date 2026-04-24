@@ -10,7 +10,8 @@ export type RegisterLoginUserDTO = {
 };
 
 export interface UserPayload {
-  user: { userId: string; role: string };
+  userId: string;
+  role:Role
 }
 
 export type UserApiResponse = {
@@ -20,16 +21,16 @@ export type UserApiResponse = {
 };
 
 export interface ITokenService {
-  signAccessToken(payload: string): string;
-  signRefreshToken(payload: string): string;
-  verify(token: string): string;
+  signAccessToken(payload: UserPayload): string;
+  signRefreshToken(payload: UserPayload): string;
+  verify(token: string): UserPayload;
 }
 
 export interface IGenerator {
   generate(): string;
 }
 
-export interface IUserRepository extends Repository<DBUserProps> {
+export interface IUserRepository extends Repository<CreateUserProps> {
   findByEmail(email: string): Promise<DBUserProps | null>;
   update(data: any): Promise<void>;
 }

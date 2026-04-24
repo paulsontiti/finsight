@@ -1,12 +1,12 @@
 
 import { InvalidCredentialsError } from "../../shared/erors/domain.errors.js";
-import type { IUserRepository, IVerificationTokenRepository } from "../../shared/types/index.js";
+import type { ITokenRepository, IUserRepository,  } from "../../shared/types/index.js";
 import type { UseCase } from "../interfaces/useCase.js";
 
 
 export class VerifyEmailUseCase implements UseCase<string,{verified:boolean}> {
   constructor(
-    private readonly tokenRepo: IVerificationTokenRepository,
+    private readonly tokenRepo: ITokenRepository,
     private readonly userRepo: IUserRepository
   ) {}
 

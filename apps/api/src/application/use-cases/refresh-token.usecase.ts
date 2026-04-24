@@ -18,16 +18,14 @@ export class RefreshTokenUseCase implements UseCase<string,string>{
 
     const payload = this.tokenService.verify(refreshToken);
 
-    const stored = await this.refreshTokenService.validate(payload.user?.userId,refreshToken);
+    const stored = await this.refreshTokenService.validate(payload.userId,refreshToken);
 
     if (!stored) {
       throw new UnauthorizedError("Invalid refresh token");
     }
 
     // generate new access token
-    const accessToken = this.tokenService.signAccessToken({
-      user: payload.user
-    });
+    const accessToken = this.tokenService.signAccessToken(payload);
 
     return accessToken;
   }

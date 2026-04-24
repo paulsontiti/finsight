@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { RefreshTokenUseCase } from "../../src/application/use-cases/refresh-token.usecase.js";
+import { RefreshTokenUseCase } from "../../src/application/use-cases/refresh-token.usecase";
 
-describe("RefreshToken Usecase", () => {
+describe("Refresh token Usecase", () => {
   it("should generate new access token", async () => {
     const tokenService = {
       verify: vi.fn().mockReturnValue({ userId: "1" }),
@@ -23,11 +23,13 @@ describe("RefreshToken Usecase", () => {
   });
 
   it("should throw if no refresh token", async () => {
-    const useCase = new RefreshTokenUseCase({} as any, {} as any);
+  const useCase = new RefreshTokenUseCase({} as any, {} as any);
 
-    await expect(useCase.execute("")).rejects.toThrow();
-  });
-  it("should throw if refresh token invalid", async () => {
+  await expect(useCase.execute(""))
+    .rejects.toThrow();
+});
+
+it("should throw if refresh token invalid", async () => {
   const tokenService = {
     verify: vi.fn().mockReturnValue({ userId: "1" })
   };
@@ -44,6 +46,7 @@ describe("RefreshToken Usecase", () => {
   await expect(useCase.execute("bad"))
     .rejects.toThrow();
 });
+
 it("should verify refresh token", async () => {
   const tokenService = {
     verify: vi.fn().mockReturnValue({ userId: "1" }),

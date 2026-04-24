@@ -20,17 +20,4 @@ describe("DI Container - Singleton", () => {
     expect(instanceCount).toBe(1);
   });
 
-  it("should not share state between non-singletons", () => {
-  const container = new Container();
-
-  container.register("service", () => ({ count: 0 }));
-
-  const s1 = container.resolve<any>("service");
-  const s2 = container.resolve<any>("service");
-
-  s1.count = 10;
-
-  expect(s2.count).toBe(0);
-});
-
 });

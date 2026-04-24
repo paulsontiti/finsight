@@ -1,10 +1,18 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach, afterAll } from "vitest";
 import prisma from "../../src/prisma.js";
-import "../setup/cleanDB.js"
-import { log } from "console";
+
 
 describe("Relations", () => {
+beforeEach(async () => {
+    await prisma.ledgerEntry.deleteMany();
+    await prisma.transaction.deleteMany();
+    await prisma.wallet.deleteMany();
+    await prisma.user.deleteMany();
+  },1000000);
 
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
   it("user should have wallet", async () => {
     const user = await prisma.user.create({
       data: {
@@ -17,7 +25,7 @@ describe("Relations", () => {
       include: { wallet: true }
     });
 
- expect(user.wallet).toBeDefined();
+    expect(user.wallet).toBeDefined();
   });
 
 });

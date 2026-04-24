@@ -19,10 +19,10 @@ export function authMiddleware(tokenService: ITokenService) {
     }
 
     try {
-      const payload:UserPayload = tokenService.verify(token);
+      const payload = tokenService.verify(token);
 
       // attach user to request
-      req.user = payload.user;
+      req.user = payload;
 
       next();
     } catch (error) {

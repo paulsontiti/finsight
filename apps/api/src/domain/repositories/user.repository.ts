@@ -1,16 +1,23 @@
 import prisma from "../../prisma.js";
-import type { CreateUserProps, DBUserProps, IUserRepository } from "../../shared/types/index.js";
-
+import type {
+  CreateUserProps,
+  DBUserProps,
+  IUserRepository,
+} from "../../shared/types/index.js";
 
 export class PrismaUserRepository implements IUserRepository {
-  async create(data: CreateUserProps): Promise<DBUserProps> {
-    return prisma.user.create({
-      data,
-    });
+  update(data: any): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  async create(data: CreateUserProps): Promise<any> {
+    
+      return prisma.user.create({
+        data,
+      });
   }
 
-  async findById(id: string): Promise<DBUserProps | null> {
-    return prisma.user.findUnique({
+  async findById(id: string): Promise<any | null> {
+      return prisma.user.findUnique({
       where: { id },
     });
   }

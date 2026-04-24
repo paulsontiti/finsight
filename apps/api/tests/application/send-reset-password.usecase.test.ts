@@ -1,10 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { SendResetPasswordUseCase } from "../../src/application/use-cases/send-reset-password.usecase.js";
+import {SendResetPasswordUseCase} from "../../src/application/use-cases/send-reset-password.usecase"
 
+describe("Send Reset Password",()=>{
 
-describe("Send Reset password usecase",()=>{
-
-    it("should generate reset token", async () => {
+it("should generate reset token", async () => {
   const tokenGenerator = {
     generate: vi.fn().mockReturnValue("reset-token")
   };
@@ -31,11 +30,9 @@ it("should find user by email", async () => {
   const userRepo = {
     findByEmail: vi.fn().mockResolvedValue({ id: "1" })
   };
-const tokenRepo = {
-    create: vi.fn().mockResolvedValue(null)
-  };
+
   const useCase = new SendResetPasswordUseCase(
-    tokenRepo as any,
+    {create: vi.fn()} as any,
     userRepo as any,
     { generate: vi.fn() } as any,
     { send: vi.fn() } as any
@@ -111,7 +108,7 @@ it("should include token in email body", async () => {
 
   await useCase.execute("test@mail.com");
 
-  const call = mailer.send.mock.calls[0]?.[0];
+  const call = mailer.send.mock.calls[0][0];
 
   expect(call.body).toContain("token123");
 });
@@ -128,10 +125,9 @@ it("should set expiry date", async () => {
 
   await useCase.execute("test@mail.com");
 
-  const data = repo.create.mock.calls[0]?.[0];
+  const data = repo.create.mock.calls[0][0];
 
   expect(data.expiresAt).toBeInstanceOf(Date);
 });
-
 
 })

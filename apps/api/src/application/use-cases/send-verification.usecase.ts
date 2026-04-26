@@ -1,5 +1,6 @@
-import type { EmailVerificaionProp, IGenerator, ITokenRepository } from "../../shared/types/index.js";
 
+
+import type { EmailVerificaionProp, IGenerator, ITokenRepository } from "../../shared/types/index.js";
 import type { UseCase } from "../interfaces/useCase.js";
 
 export class SendVerificationUseCase implements UseCase<EmailVerificaionProp,{success:boolean}>{

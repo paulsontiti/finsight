@@ -1,11 +1,9 @@
-
-
 // Repositories
-
 
 // Use Cases
 import { FundWalletUseCase } from "../../application/use-cases/fund-wallet.usercase.js";
 import { LoginUserUseCase } from "../../application/use-cases/login-user.usecase.js";
+import { RefreshTokenUseCase } from "../../application/use-cases/refresh-token.usecase.js";
 import { RegisterUserUseCase } from "../../application/use-cases/register-user.usecase.js";
 import { PrismaRefreshTokenRepository } from "../../domain/repositories/refresh-token.repository.js";
 import { PrismaUserRepository } from "../../domain/repositories/user.repository.js";
@@ -50,14 +48,14 @@ container.register("hashServiceRepository", () => {
 });
 container.register("jwtTokenService", () => {
   const config = container.resolve<any>("configService");
-  const jwtSecret = config.get("JWT_SECRET")
+  const jwtSecret = config.get("JWT_SECRET");
   return new JwtService(jwtSecret);
 });
 
 container.register("refreshTokenService", () => {
   const refreshRepository = container.resolve<any>("refreshRepository");
-    const hashService = container.resolve<BcryptService>("hashServiceRepository");
-  return new RefreshTokenService(refreshRepository,hashService);
+  const hashService = container.resolve<BcryptService>("hashServiceRepository");
+  return new RefreshTokenService(refreshRepository, hashService);
 });
 
 /**
@@ -65,12 +63,20 @@ container.register("refreshTokenService", () => {
  * REGISTER LOGGERS
  * =========================
  */
-container.register("auditLogger", () => {
-  return new AuditLogger();
-},true);
-container.register("transactionLogger", () => {
-  return new TransactionLogger();
-},true);
+container.register(
+  "auditLogger",
+  () => {
+    return new AuditLogger();
+  },
+  true,
+);
+container.register(
+  "transactionLogger",
+  () => {
+    return new TransactionLogger();
+  },
+  true,
+);
 
 /**
  * =========================
@@ -82,20 +88,34 @@ container.register("registerUserUseCase", (c) => {
   const auditLogger = c.resolve<AuditLogger>("auditLogger");
   const hashService = c.resolve<BcryptService>("hashServiceRepository");
 
-  return new RegisterUserUseCase(userRepo,hashService,auditLogger);
+  return new RegisterUserUseCase(userRepo, hashService, auditLogger);
 });
 
 container.register("loginUserUseCase", (c) => {
   const userRepo = c.resolve<PrismaUserRepository>("userRepository");
   const hashService = c.resolve<BcryptService>("hashServiceRepository");
-   const jwtTokenService = container.resolve<JwtService>("jwtTokenService");
-      const refreshTokenService = container.resolve<RefreshTokenService>("refreshTokenService");
+  const jwtTokenService = container.resolve<JwtService>("jwtTokenService");
+  const refreshTokenService = container.resolve<RefreshTokenService>(
+    "refreshTokenService",
+  );
 
-  return new LoginUserUseCase(userRepo,hashService,jwtTokenService,refreshTokenService);
+  return new LoginUserUseCase(
+    userRepo,
+    hashService,
+    jwtTokenService,
+    refreshTokenService,
+  );
+});
+
+container.register("refreshTokenUseCase", (c) => {
+  const refreshTokenService = c.resolve<RefreshTokenService>(
+    "refreshTokenService",
+  );
+  const jwtTokenService = c.resolve<JwtService>("jwtTokenService");
+  return new RefreshTokenUseCase(jwtTokenService, refreshTokenService);
 });
 
 container.register("fundWalletUseCase", (c) => {
-  //const userRepo = c.resolve<UserRepository>("userRepository");
   const transactionLogger = c.resolve<TransactionLogger>("transactionLogger");
 
   return new FundWalletUseCase(transactionLogger);

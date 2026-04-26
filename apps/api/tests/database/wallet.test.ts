@@ -15,7 +15,7 @@ describe("Wallet Model", () => {
     });
 
     userId = user.id;
-  }, 1000000);
+  }, 100000);
 
   afterAll(async () => {
     await prisma.$disconnect();

@@ -2,6 +2,7 @@
 // Use Cases
 import { FundWalletUseCase } from "../../application/use-cases/fund-wallet.usercase.js";
 import { LoginUserUseCase } from "../../application/use-cases/login-user.usecase.js";
+import { RefreshTokenUseCase } from "../../application/use-cases/refresh-token.usecase.js";
 import { RegisterUserUseCase } from "../../application/use-cases/register-user.usecase.js";
 import { PrismaRefreshTokenRepository } from "../../domain/repositories/refresh-token.repository.js";
 import { PrismaUserRepository } from "../../domain/repositories/user.repository.js";
@@ -78,8 +79,12 @@ container.register("loginUserUseCase", (c) => {
     const refreshTokenService = container.resolve("refreshTokenService");
     return new LoginUserUseCase(userRepo, hashService, jwtTokenService, refreshTokenService);
 });
+container.register("refreshTokenUseCase", (c) => {
+    const refreshTokenService = c.resolve("refreshTokenService");
+    const jwtTokenService = c.resolve("jwtTokenService");
+    return new RefreshTokenUseCase(jwtTokenService, refreshTokenService);
+});
 container.register("fundWalletUseCase", (c) => {
-    //const userRepo = c.resolve<UserRepository>("userRepository");
     const transactionLogger = c.resolve("transactionLogger");
     return new FundWalletUseCase(transactionLogger);
 });

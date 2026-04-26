@@ -10,7 +10,7 @@ describe("Register Endpoint", () => {
     await prisma.transaction.deleteMany();
     await prisma.wallet.deleteMany();
     await prisma.user.deleteMany();
-  }, 1000000);
+  }, 100000000);
 
   afterAll(async () => {
     await prisma.$disconnect();

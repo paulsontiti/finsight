@@ -1,1 +1,0 @@
-{"version":3,"file":"role.middleware.d.ts","sourceRoot":"","sources":["role.middleware.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,QAAQ,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AACtD,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,0BAA0B,CAAC;AAG5D,wBAAgB,cAAc,CAAC,YAAY,EAAE,MAAM,EAAE,IAC3C,KAAK,WAAW,EAAE,KAAK,QAAQ,EAAE,MAAM,YAAY,UAa5D"}

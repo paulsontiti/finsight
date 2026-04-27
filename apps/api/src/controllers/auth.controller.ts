@@ -1,9 +1,15 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { container } from "../shared/container/index.js";
 import type { RegisterUserUseCase } from "../application/use-cases/register-user.usecase.js";
 import type { LoginUserUseCase } from "../application/use-cases/login-user.usecase.js";
 import type { RefreshTokenUseCase } from "../application/use-cases/refresh-token.usecase.js";
-import { InvalidCredentialsError, UnauthorizedError } from "../shared/erors/domain.errors.js";
+import {
+  InvalidCredentialsError,
+  UnauthorizedError,
+  UserNotFoundError,
+} from "../shared/erors/domain.errors.js";
+import type { VerifyEmailUseCase } from "../application/use-cases/verify-email.usecase.js";
+import { DatabaseError } from "../shared/erors/system.error.js";
 
 export class AuthController {
   async register(req: Request, res: Response) {
@@ -48,11 +54,11 @@ export class AuthController {
         return res.status(201).json({ accessToken });
       } catch (err: any) {
         if (err instanceof InvalidCredentialsError) {
-        return res.status(401).json({ message: err.message });
-      }
+          return res.status(401).json({ message: err.message });
+        }
         if (err instanceof UnauthorizedError) {
-        return res.status(403).json({ message: "Unautorised access" });
-      }
+          return res.status(403).json({ message: "Unautorised access" });
+        }
       }
     } catch (error: any) {
       if (error instanceof UnauthorizedError) {
@@ -61,4 +67,43 @@ export class AuthController {
       return res.status(200).json({ message: "Internal error" });
     }
   }
+
+  // async verify(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const { token } = req.query;
+
+  //     // 🔴 Validation
+  //     if (!token || typeof token !== "string" || token.trim() === "") {
+  //       return res.status(401).json({
+  //         message: "Verification token is required",
+  //       });
+  //     }
+
+  //     const useCase =
+  //       container.resolve<VerifyEmailUseCase>("verifyEmailUseCase");
+
+  //     try {
+  //       const result = await useCase.execute(token);
+  //       return res.status(201).json({
+  //         message: result
+  //           ? "Email verified successfully"
+  //           : "Email not verified",
+  //       });
+  //     } catch (err: any) {
+  //       if (err instanceof InvalidCredentialsError) {
+  //         return res.status(401).json({ message: err.message });
+  //       }
+  //       if (err instanceof UserNotFoundError) {
+  //         return res.status(409).json({ message: err.message });
+  //       }
+  //       if (err instanceof DatabaseError) {
+  //         return res.status(501).json({ message: err.message });
+  //       }
+
+  //       return res.status(500).json({ message: err.message });
+  //     }
+  //   } catch (err: any) {
+  //     return res.status(500).json({ message: err.message });
+  //   }
+  // }
 }

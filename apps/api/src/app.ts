@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import authRouter from "./routes/auth.route.js";
 import { AppError } from "./shared/erors/base.error.js";
 import cookieParser from "cookie-parser";
+import authRouter from "./routes/auth.route.js";
 
 const app = express();
 
@@ -12,7 +12,6 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
-
 
 app.use(cookieParser());
 

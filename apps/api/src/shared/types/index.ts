@@ -30,9 +30,9 @@ export interface IGenerator {
   generate(): string;
 }
 
-export interface IUserRepository extends Repository<CreateUserProps> {
+export interface IUserRepository extends Repository<CreateUserProps,DBUserProps> {
   findByEmail(email: string): Promise<DBUserProps | null>;
-  update(data: any): Promise<void>;
+  update(id:string,data: any): Promise<void>;
 }
 
 export interface AuthRequest extends Request {
@@ -80,7 +80,7 @@ export interface CreateApiKeyProps {
   ownerId: string;
 }
 
-export interface IApiKeyRepository extends Repository<CreateApiKeyProps> {
+export interface IApiKeyRepository extends Repository<CreateApiKeyProps,DBUserProps> {
   findByKey(key: string): Promise<CreateApiKeyProps>;
 }
 export interface IHashService {
@@ -88,9 +88,9 @@ export interface IHashService {
   compare(password: string, hash: string): Promise<boolean>;
 }
 
-export interface Repository<T> {
-  create(entity: T): Promise<T>;
-  findById(id: string): Promise<T | null>;
+export interface Repository<Input,Output> {
+  create(entity: Input): Promise<Output>;
+  findById(id: string): Promise<Output | null>;
 }
 export interface IRefreshTokenRepository {
   create(data: CreateRefreshTokenProps): Promise<void>;

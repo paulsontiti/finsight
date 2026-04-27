@@ -5,8 +5,10 @@ import { FundWalletUseCase } from "../../application/use-cases/fund-wallet.userc
 import { LoginUserUseCase } from "../../application/use-cases/login-user.usecase.js";
 import { RefreshTokenUseCase } from "../../application/use-cases/refresh-token.usecase.js";
 import { RegisterUserUseCase } from "../../application/use-cases/register-user.usecase.js";
+import { VerifyEmailUseCase } from "../../application/use-cases/verify-email.usecase.js";
 import { PrismaRefreshTokenRepository } from "../../domain/repositories/refresh-token.repository.js";
 import { PrismaUserRepository } from "../../domain/repositories/user.repository.js";
+import { PrismaVerificationTokenRepository } from "../../domain/repositories/verification-token.repository.js";
 import { RefreshTokenService } from "../../services/refresh-token.service.js";
 import { ConfigService } from "../config/config.service.js";
 import { Container } from "../container.js";
@@ -36,6 +38,9 @@ container.register("userRepository", () => {
 
 container.register("refreshRepository", () => {
   return new PrismaRefreshTokenRepository();
+});
+container.register("emailVerificationRepository", () => {
+  return new PrismaVerificationTokenRepository();
 });
 
 /**
@@ -113,6 +118,12 @@ container.register("refreshTokenUseCase", (c) => {
   );
   const jwtTokenService = c.resolve<JwtService>("jwtTokenService");
   return new RefreshTokenUseCase(jwtTokenService, refreshTokenService);
+});
+
+container.register("verifyEmailUseCase", (c) => {
+  const userRepo = c.resolve<PrismaUserRepository>("userRepository");
+    const emailVerificationRepo = c.resolve<PrismaVerificationTokenRepository>("emailVerificationRepository");
+  return new VerifyEmailUseCase(emailVerificationRepo, userRepo);
 });
 
 container.register("fundWalletUseCase", (c) => {

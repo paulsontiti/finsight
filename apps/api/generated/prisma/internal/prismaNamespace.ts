@@ -397,7 +397,8 @@ export const ModelName = {
   Wallet: 'Wallet',
   Transaction: 'Transaction',
   LedgerEntry: 'LedgerEntry',
-  SavingsPlan: 'SavingsPlan'
+  SavingsPlan: 'SavingsPlan',
+  Idempotency: 'Idempotency'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordResetToken" | "verificationToken" | "refreshToken" | "wallet" | "transaction" | "ledgerEntry" | "savingsPlan"
+    modelProps: "user" | "passwordResetToken" | "verificationToken" | "refreshToken" | "wallet" | "transaction" | "ledgerEntry" | "savingsPlan" | "idempotency"
     txIsolationLevel: never
   }
   model: {
@@ -1009,6 +1010,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Idempotency: {
+      payload: Prisma.$IdempotencyPayload<ExtArgs>
+      fields: Prisma.IdempotencyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.IdempotencyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.IdempotencyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyPayload>
+        }
+        findFirst: {
+          args: Prisma.IdempotencyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.IdempotencyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyPayload>
+        }
+        findMany: {
+          args: Prisma.IdempotencyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyPayload>[]
+        }
+        create: {
+          args: Prisma.IdempotencyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyPayload>
+        }
+        createMany: {
+          args: Prisma.IdempotencyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.IdempotencyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyPayload>
+        }
+        update: {
+          args: Prisma.IdempotencyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyPayload>
+        }
+        deleteMany: {
+          args: Prisma.IdempotencyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.IdempotencyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.IdempotencyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyPayload>
+        }
+        aggregate: {
+          args: Prisma.IdempotencyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIdempotency>
+        }
+        groupBy: {
+          args: Prisma.IdempotencyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IdempotencyGroupByOutputType>[]
+        }
+        findRaw: {
+          args: Prisma.IdempotencyFindRawArgs<ExtArgs>
+          result: Prisma.JsonObject
+        }
+        aggregateRaw: {
+          args: Prisma.IdempotencyAggregateRawArgs<ExtArgs>
+          result: Prisma.JsonObject
+        }
+        count: {
+          args: Prisma.IdempotencyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IdempotencyCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1120,6 +1195,16 @@ export const SavingsPlanScalarFieldEnum = {
 } as const
 
 export type SavingsPlanScalarFieldEnum = (typeof SavingsPlanScalarFieldEnum)[keyof typeof SavingsPlanScalarFieldEnum]
+
+
+export const IdempotencyScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  response: 'response',
+  createdAt: 'createdAt'
+} as const
+
+export type IdempotencyScalarFieldEnum = (typeof IdempotencyScalarFieldEnum)[keyof typeof IdempotencyScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1250,6 +1335,13 @@ export type ListEnumSavingsStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1356,6 +1448,7 @@ export type GlobalOmitConfig = {
   transaction?: Prisma.TransactionOmit
   ledgerEntry?: Prisma.LedgerEntryOmit
   savingsPlan?: Prisma.SavingsPlanOmit
+  idempotency?: Prisma.IdempotencyOmit
 }
 
 /* Types for Logging */

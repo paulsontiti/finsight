@@ -56,7 +56,8 @@ export const ModelName = {
   Wallet: 'Wallet',
   Transaction: 'Transaction',
   LedgerEntry: 'LedgerEntry',
-  SavingsPlan: 'SavingsPlan'
+  SavingsPlan: 'SavingsPlan',
+  Idempotency: 'Idempotency'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -159,6 +160,16 @@ export const SavingsPlanScalarFieldEnum = {
 } as const
 
 export type SavingsPlanScalarFieldEnum = (typeof SavingsPlanScalarFieldEnum)[keyof typeof SavingsPlanScalarFieldEnum]
+
+
+export const IdempotencyScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  response: 'response',
+  createdAt: 'createdAt'
+} as const
+
+export type IdempotencyScalarFieldEnum = (typeof IdempotencyScalarFieldEnum)[keyof typeof IdempotencyScalarFieldEnum]
 
 
 export const SortOrder = {

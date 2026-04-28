@@ -5,7 +5,7 @@ describe("Wallet Entity", () => {
   it("should create wallet successfully", () => {
     const wallet = Wallet.create({
       userId: "user_1",
-      currency: "NGN",
+      currency: "NGN",balance:0
     });
 
     expect(wallet).toBeDefined();
@@ -16,7 +16,7 @@ describe("Wallet Entity", () => {
   it("should default wallet status to ACTIVE", () => {
     const wallet = Wallet.create({
       userId: "user_1",
-      currency: "NGN",
+      currency: "NGN",balance:0
     });
 
     expect(wallet.status).toBe("ACTIVE");
@@ -25,7 +25,7 @@ describe("Wallet Entity", () => {
   it("should generate wallet id", () => {
     const wallet = Wallet.create({
       userId: "user_1",
-      currency: "NGN",
+      currency: "NGN",balance:0
     });
 
     expect(wallet.id).toBeDefined();
@@ -34,7 +34,7 @@ describe("Wallet Entity", () => {
   it("should be active by default", () => {
     const wallet = Wallet.create({
       userId: "user_1",
-      currency: "NGN",
+      currency: "NGN",balance:0
     });
 
     expect(wallet.isActive()).toBe(true);
@@ -43,7 +43,7 @@ describe("Wallet Entity", () => {
   it("should freeze wallet", () => {
     const wallet = Wallet.create({
       userId: "user_1",
-      currency: "NGN",
+      currency: "NGN",balance:0
     });
 
     wallet.freeze();
@@ -54,7 +54,7 @@ describe("Wallet Entity", () => {
   it("should unfreeze wallet", () => {
     const wallet = Wallet.create({
       userId: "user_1",
-      currency: "NGN",
+      currency: "NGN",balance:0
     });
 
     wallet.freeze();
@@ -66,7 +66,7 @@ describe("Wallet Entity", () => {
   it("should not allow userId modification", () => {
     const wallet = Wallet.create({
       userId: "user_1",
-      currency: "NGN",
+      currency: "NGN",balance:0
     });
 
     expect(wallet.userId).toBe("user_1");
@@ -75,7 +75,7 @@ describe("Wallet Entity", () => {
   it("should require currency", () => {
     const wallet = Wallet.create({
       userId: "user_1",
-      currency: "NGN",
+      currency: "NGN",balance:0
     });
 
     expect(wallet.currency).toBe("NGN");

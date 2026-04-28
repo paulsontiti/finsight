@@ -4,7 +4,7 @@ export type WalletStatus = "ACTIVE" | "FROZEN";
 
 export interface WalletProps {
   userId: string;
-  balance?:number;
+  balance:number;
   currency: string;
   status: WalletStatus;
   createdAt: Date;
@@ -33,7 +33,7 @@ export class Wallet extends Entity{
       status: "ACTIVE",
       createdAt: new Date(),
       updatedAt: new Date(),
-      ...(props.balance && {balance:props.balance})
+      balance: props.balance
     });
   }
 
@@ -48,6 +48,10 @@ export class Wallet extends Entity{
 
   get status() {
     return this.props.status;
+  }
+
+  get balance() {
+    return this.props.balance;
   }
 
   isActive() {

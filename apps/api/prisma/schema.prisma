@@ -156,6 +156,8 @@ model LedgerEntry {
   // Relations
   wallet      Wallet      @relation(fields: [walletId], references: [id], onDelete: Cascade)
   transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@index([walletId])
 }
 
 //////////////////////
@@ -172,4 +174,14 @@ model SavingsPlan {
 
   // Relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+//////////////////////
+// IDEMPOTENCY
+//////////////////////
+model Idempotency {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  key       String   @unique
+  response  Json
+  createdAt DateTime @default(now())
 }

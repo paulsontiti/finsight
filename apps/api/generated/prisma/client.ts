@@ -86,3 +86,9 @@ export type LedgerEntry = Prisma.LedgerEntryModel
  * 
  */
 export type SavingsPlan = Prisma.SavingsPlanModel
+/**
+ * Model Idempotency
+ * ///////////////////
+ * ///////////////////
+ */
+export type Idempotency = Prisma.IdempotencyModel

@@ -1,159 +1,182 @@
-# Turborepo starter
+# 🚀 FinSight – Financial Intelligence & Fintech SaaS Platform
 
-This Turborepo starter is maintained by the Turborepo core team.
+A **production-grade full-stack fintech platform** designed to help individuals and businesses manage finances, access credit insights, and perform seamless financial transactions — all in one system.
 
-## Using this example
+---
 
-Run the following command:
+## 💡 Vision
 
-```sh
-npx create-turbo@latest
-```
+FinSight is built to become a **scalable fintech infrastructure platform** that:
 
-## What's inside?
+- Empowers users with financial insights  
+- Enables alternative credit scoring  
+- Supports everyday transactions  
+- Provides APIs for other businesses (SaaS layer)  
 
-This Turborepo includes the following packages/apps:
+---
 
-### Apps and Packages
+## 🧠 Key Features
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### 🔐 Authentication System (Production-Grade)
+- User Registration & Login
+- JWT Authentication + Refresh Tokens
+- Role-Based Access Control (RBAC)
+- API Key System (for SaaS clients)
+- Email Verification (token-based)
+- Password Reset Flow (secure + expiring tokens)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+---
 
-### Utilities
+### 💰 (In Progress) Core Fintech Modules
+- Wallet Infrastructure (balances, funding, transfers)
+- Ledger System (double-entry accounting)
+- Financial Tracking & Insights
+- Savings Automation
+- Credit Scoring Engine
+- VTU Services (airtime, data, bill payments)
+- Public API Platform (for businesses)
 
-This Turborepo has some additional tools already setup for you:
+---
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## 🏗️ Architecture
 
-### Build
+This project follows **Clean Architecture (OOP-based)**:
 
-To build all apps and packages, run the following command:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+Controller → Use Case → Repository → Database
 
-```sh
-cd my-turborepo
-turbo build
-```
 
-Without global `turbo`, use your package manager:
+### Layers:
+- **Domain** → Entities & business rules  
+- **Application** → Use cases (business logic)  
+- **Infrastructure** → Database, external services  
+- **Interface** → Controllers (HTTP layer)  
 
-```sh
-cd my-turborepo
-npx turbo build
-npm dlx turbo build
-npm exec turbo build
-```
+---
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+## ⚙️ Tech Stack
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+### 🖥️ Frontend
+- Next.js  
+- TypeScript  
+- TailwindCSS  
 
-```sh
-turbo build --filter=docs
-```
+### 🧠 Backend
+- Node.js  
+- Express.js  
+- TypeScript  
+- MongoDB  
+- Prisma ORM  
 
-Without global `turbo`:
+---
 
-```sh
-npx turbo build --filter=docs
-npm exec turbo build --filter=docs
-npm exec turbo build --filter=docs
-```
+## 🧪 Testing Strategy
 
-### Develop
+Built using **Test-Driven Development (TDD)**
 
-To develop all apps and packages, run the following command:
+- Unit Tests  
+- Integration Tests  
+- Auth flow coverage (Register → Login → Refresh → Verify → Reset)
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+### Tools:
+- Vitest  
+- Supertest  
 
-```sh
-cd my-turborepo
-turbo dev
-```
+---
 
-Without global `turbo`, use your package manager:
+## 🔐 Security Practices
 
-```sh
-cd my-turborepo
-npx turbo dev
-npm exec turbo dev
-npm exec turbo dev
-```
+- Password hashing (bcrypt)
+- Token-based authentication (JWT)
+- Refresh token rotation
+- Secure cookie handling
+- Input validation & sanitization
+- Token expiry & invalidation
+- No sensitive data exposure
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+---
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+## 📊 Engineering Highlights
 
-```sh
-turbo dev --filter=web
-```
+- Clean Architecture implementation  
+- Dependency Injection system  
+- Centralized error handling  
+- Logging & audit structure  
+- Scalable database design  
+- API-first system design  
 
-Without global `turbo`:
+---
 
-```sh
-npx turbo dev --filter=web
-npm exec turbo dev --filter=web
-npm exec turbo dev --filter=web
-```
+## 📦 Project Structure
 
-### Remote Caching
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+apps/
+api/
+src/
+domain/
+application/
+infrastructure/
+interfaces/
+tests/
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+packages/
+shared/
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+---
 
-```sh
-cd my-turborepo
-turbo login
-```
+## 🚀 Getting Started
 
-Without global `turbo`, use your package manager:
+### 1. Clone repo
 
-```sh
-cd my-turborepo
-npx turbo login
-npm exec turbo login
-npm exec turbo login
-```
+git clone https://github.com/your-username/finsight.git
+cd finsight
+2. Install dependencies
+npm install
+3. Setup environment
+ .env.test .env
+4. Run database
+npx prisma migrate dev
+5. Start development
+npm run dev
+6. Run tests
+npm run test
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+📈 Roadmap
+ Authentication System (Complete)
+ Wallet System
+ Ledger System
+ Financial Analytics
+ Credit Scoring Engine
+ VTU Integrations
+ Public API Platform
+ Deployment (Production)
+ 
+🎯 Project Goal
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+To build a real-world fintech system that is:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+Scalable
+Secure
+Testable
+Production-ready
 
-```sh
-turbo link
-```
+🤝 Open to Opportunities
 
-Without global `turbo`:
+I’m open to:
 
-```sh
-npx turbo link
-npm exec turbo link
-npm exec turbo link
-```
+Backend / Full-stack roles
+Fintech startups
+Freelance & contract work
 
-## Useful Links
+📬 Contact
+LinkedIn: www.linkedin.com/in/paulson-nwoha-0455aa34a
+Email: paulsontiti@gmail.com
 
-Learn more about the power of Turborepo:
+⭐ Final Note
 
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+This is not just a project —
+it’s a full system designed with real-world engineering principles,
+focused on scalability, security, and maintainability.
+
+If you're hiring or building in fintech, feel free to reach out.

@@ -19,6 +19,12 @@ export class UserNotFoundError extends AppError {
   }
 }
 
+export class UserAlreadyHasWalletError extends AppError {
+  constructor() {
+    super("User already has a wallet", 407);
+  }
+}
+
 export class InvalidCredentialsError extends AppError {
   constructor(message: string = "Invalid credentials") {
     super(message, 401);

@@ -3,16 +3,16 @@ import { Entity } from "./entity.js";
 export type EntryType = "DEBIT" | "CREDIT";
 
 export interface LedgerEntryProps {
-//   id: string;
+  //   id: string;
   walletId: string;
   transactionId: string;
   type: EntryType;
   amount: number;
-  description: string;
+  description?: string;
   createdAt: Date;
 }
 
-export class LedgerEntry extends Entity{
+export class LedgerEntry extends Entity {
   private props: LedgerEntryProps;
 
   private constructor(props: LedgerEntryProps) {
@@ -24,7 +24,7 @@ export class LedgerEntry extends Entity{
     if (props.amount <= 0) {
       throw new Error("Ledger amount must be greater than zero");
     }
-       if (!props.transactionId) {
+    if (!props.transactionId) {
       throw new Error("Ledger transaction Id is required");
     }
 
@@ -34,8 +34,8 @@ export class LedgerEntry extends Entity{
       transactionId: props.transactionId,
       type: props.type,
       amount: props.amount,
-      description: props.description,
-      createdAt: new Date()
+      createdAt: new Date(),
+      ...(props.description && { description: props.description }),
     });
   }
 

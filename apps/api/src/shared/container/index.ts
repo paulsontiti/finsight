@@ -5,11 +5,17 @@ import { FundWalletUseCase } from "../../application/use-cases/fund-wallet.userc
 import { LoginUserUseCase } from "../../application/use-cases/login-user.usecase.js";
 import { RefreshTokenUseCase } from "../../application/use-cases/refresh-token.usecase.js";
 import { RegisterUserUseCase } from "../../application/use-cases/register-user.usecase.js";
+import { ResetPasswordUseCase } from "../../application/use-cases/reset-password.usecase.js";
+import { SendResetPasswordUseCase } from "../../application/use-cases/send-reset-password.usecase.js";
 import { VerifyEmailUseCase } from "../../application/use-cases/verify-email.usecase.js";
+import { PrismaPasswordResetTokenRepository } from "../../domain/repositories/prisma-password-reset.repository.js";
 import { PrismaRefreshTokenRepository } from "../../domain/repositories/refresh-token.repository.js";
 import { PrismaUserRepository } from "../../domain/repositories/user.repository.js";
 import { PrismaVerificationTokenRepository } from "../../domain/repositories/verification-token.repository.js";
+import { MockMailer } from "../../services/mock-mailer.service.js";
 import { RefreshTokenService } from "../../services/refresh-token.service.js";
+import { TokenGeneratorService } from "../../services/token-generator.service.js";
+import { ValidationsService } from "../../services/validations-service.js";
 import { ConfigService } from "../config/config.service.js";
 import { Container } from "../container.js";
 import { AuditLogger } from "../logger/audit.logger.js";
@@ -43,6 +49,10 @@ container.register("emailVerificationRepository", () => {
   return new PrismaVerificationTokenRepository();
 });
 
+container.register("passwordResetTokenRepository", () => {
+  return new PrismaPasswordResetTokenRepository();
+});
+
 /**
  * =========================
  * REGISTER SERVICES
@@ -51,6 +61,15 @@ container.register("emailVerificationRepository", () => {
 container.register("hashServiceRepository", () => {
   return new BcryptService();
 });
+
+container.register("mockMailerService", () => {
+  return new MockMailer();
+});
+
+container.register("tokenGeneratorService", () => {
+  return new TokenGeneratorService();
+});
+
 container.register("jwtTokenService", () => {
   const config = container.resolve<any>("configService");
   const jwtSecret = config.get("JWT_SECRET");
@@ -112,6 +131,40 @@ container.register("loginUserUseCase", (c) => {
   );
 });
 
+container.register("resetPasswordUserUseCase", (c) => {
+  const userRepo = c.resolve<PrismaUserRepository>("userRepository");
+  const hashService = c.resolve<BcryptService>("hashServiceRepository");
+  const passwordResetTokenRepository =
+    container.resolve<PrismaPasswordResetTokenRepository>(
+      "passwordResetTokenRepository",
+    );
+
+  return new ResetPasswordUseCase(
+    passwordResetTokenRepository,
+    userRepo,
+    hashService,
+  );
+});
+
+container.register("sendResetPasswordUserUseCase", (c) => {
+  const userRepo = c.resolve<PrismaUserRepository>("userRepository");
+  const mockMailerService = c.resolve<MockMailer>("mockMailerService");
+  const passwordResetTokenRepository =
+    container.resolve<PrismaPasswordResetTokenRepository>(
+      "passwordResetTokenRepository",
+    );
+  const tokenGeneratorService = container.resolve<TokenGeneratorService>(
+    "tokenGeneratorService",
+  );
+
+  return new SendResetPasswordUseCase(
+    passwordResetTokenRepository,
+    userRepo,
+    tokenGeneratorService,
+    mockMailerService,
+  );
+});
+
 container.register("refreshTokenUseCase", (c) => {
   const refreshTokenService = c.resolve<RefreshTokenService>(
     "refreshTokenService",
@@ -122,7 +175,9 @@ container.register("refreshTokenUseCase", (c) => {
 
 container.register("verifyEmailUseCase", (c) => {
   const userRepo = c.resolve<PrismaUserRepository>("userRepository");
-    const emailVerificationRepo = c.resolve<PrismaVerificationTokenRepository>("emailVerificationRepository");
+  const emailVerificationRepo = c.resolve<PrismaVerificationTokenRepository>(
+    "emailVerificationRepository",
+  );
   return new VerifyEmailUseCase(emailVerificationRepo, userRepo);
 });
 

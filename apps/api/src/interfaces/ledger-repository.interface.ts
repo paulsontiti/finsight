@@ -1,10 +1,12 @@
-export interface ILedgerRepository {
-  createMany(entries: {
+export interface LedgerEntryProps{
     walletId: string;
     transactionId: string;
     type: "DEBIT" | "CREDIT";
     amount: number;
-  }[]): Promise<void>;
+  }
+
+export interface ILedgerRepository {
+  createMany(entries: LedgerEntryProps[]): Promise<void>;
 
   findByWalletId(walletId: string): Promise<any[]>;
 }

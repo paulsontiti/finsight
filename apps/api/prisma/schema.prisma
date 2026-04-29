@@ -180,8 +180,20 @@ model SavingsPlan {
 // IDEMPOTENCY
 //////////////////////
 model Idempotency {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  key       String   @unique
-  response  Json
-  createdAt DateTime @default(now())
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  key           String
+  userId        String
+  requestHash   String
+  response      Json?
+  status        IdempotencyStatus   // PROCESSING | COMPLETED | FAILED
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([key, userId])
+}
+
+enum IdempotencyStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
 }

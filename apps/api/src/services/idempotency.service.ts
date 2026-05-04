@@ -6,22 +6,21 @@ export class IdempotencyService {
 
   async handle<T>({
     key,
-    userId,
+    walletId,
     payload,
     handler,
   }: {
     key: string;
-    userId: string;
+    walletId: string;
     payload: any;
     handler: () => Promise<T>;
   }): Promise<T> {
-
-    if(!key || !userId){
-        throw new Error("Idempotency key/userId required");
+    if (!key || !walletId) {
+      throw new Error("Idempotency key/userId required");
     }
     const requestHash = hashRequest(payload);
 
-    const existing = await this.repo.find(key, userId);
+    const existing = await this.repo.find(key, walletId);
 
     // 🔁 CASE 1: EXISTING REQUEST
     if (existing) {
@@ -41,21 +40,21 @@ export class IdempotencyService {
     // 🆕 CASE 2: NEW REQUEST
     await this.repo.create({
       key,
-      userId,
+      walletId,
       requestHash,
     });
 
     try {
-      await this.repo.updateStatus(key, userId, "PROCESSING");
+      await this.repo.updateStatus(key, walletId, "PROCESSING");
 
       const result = await handler();
 
-      await this.repo.saveResponse(key, userId, result);
-      await this.repo.updateStatus(key, userId, "COMPLETED");
+      await this.repo.saveResponse(key, walletId, result);
+      await this.repo.updateStatus(key, walletId, "COMPLETED");
 
       return result;
     } catch (error) {
-      await this.repo.updateStatus(key, userId, "FAILED");
+      await this.repo.updateStatus(key, walletId, "FAILED");
       throw error;
     }
   }

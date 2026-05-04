@@ -133,12 +133,15 @@ model Transaction {
   type        TransactionType
   reference   String          @unique
   description String?
-  status      String          @default("SUCCESS")
+  status      String          @default("PENDING")
   createdAt   DateTime        @default(now())
 
   // Relations
   wallet        Wallet        @relation(fields: [walletId], references: [id], onDelete: Cascade)
   ledgerEntries LedgerEntry[]
+
+  @@index([walletId, createdAt])
+
 }
 
 //////////////////////

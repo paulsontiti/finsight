@@ -1,12 +1,21 @@
 export interface ITransactionRepository {
   create(data: {
-    userId: string;
+    walletId: string;
     type: string;
     amount: number;
     reference: string;
-  }): Promise<{ id: string,type:string }>;
-
+    description?: string;
+  }): Promise<{ id: string }>;
   updateStatus(id: string, status: "PENDING" | "SUCCESS" | "FAILED"): Promise<void>;
 
   findByReference(reference: string): Promise<any | null>;
+  findMany(params: {
+    walletId: string;
+    page: number;
+    limit: number;
+    type?: string;
+    status?: string;
+    fromDate?: Date;
+    toDate?: Date;
+  }): Promise<any>;
 }

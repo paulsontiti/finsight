@@ -42,8 +42,8 @@ beforeEach(() => {
 });
 
 const validInput = {
-  senderId: "user_1",
-  receiverId: "user_2",
+  walletId: "user_1",
+  receiverWalletId: "user_2",
   amount: 500,
   reference: "ref_123",
   idempotencyKey: "idem_123"
@@ -85,7 +85,7 @@ it("should create transfer transaction", async () => {
 
   expect(transactionRepo.create).toHaveBeenCalledWith(
     expect.objectContaining({
-      userId: "user_1",
+      walletId: "user_1",
       type: "TRANSFER",
       amount: 500
     })
@@ -145,8 +145,8 @@ it("should reject transfer to self", async () => {
   await expect(
     useCase.execute({
       ...validInput,
-      senderId: "user_1",
-      receiverId: "user_1"
+      walletId: "user_1",
+      receiverWalletId: "user_1"
     })
   ).rejects.toThrow("Cannot transfer to self");
 });

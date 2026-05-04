@@ -9,8 +9,8 @@ import type { IdempotencyService } from "../../services/idempotency.service.js";
 import type { UseCase } from "../interfaces/useCase.js";
 
 interface TransferUsecaseInputProps {
-  senderId: string;
-  receiverId: string;
+  walletId: string;
+  receiverWalletId: string;
   amount: number;
   reference: string;
   idempotencyKey: string;
@@ -36,15 +36,15 @@ export class TransferUseCase implements UseCase<
   async execute(input: TransferUsecaseInputProps) {
     return this.idempotencyService.handle({
       key: input.idempotencyKey,
-      userId: input.senderId,
+      walletId: input.walletId,
       payload: input,
       handler: async () => this.executeTransferLogic(input),
     });
   }
 
   private async executeTransferLogic(input: {
-    senderId: string;
-    receiverId: string;
+    walletId: string;
+    receiverWalletId: string;
     amount: number;
     reference: string;
   }) {
@@ -52,13 +52,13 @@ export class TransferUseCase implements UseCase<
       throw new Error("Invalid amount");
     }
 
-    if (input.senderId === input.receiverId) {
+    if (input.walletId === input.receiverWalletId) {
       throw new Error("Cannot transfer to self");
     }
 
     const [senderWallet, receiverWallet] = await Promise.all([
-      this.walletRepo.findByUserId(input.senderId),
-      this.walletRepo.findByUserId(input.receiverId),
+      this.walletRepo.findByUserId(input.walletId),
+      this.walletRepo.findByUserId(input.receiverWalletId),
     ]);
 
     if (!senderWallet || !receiverWallet) {
@@ -72,7 +72,7 @@ export class TransferUseCase implements UseCase<
     return this.prisma.$transaction(async (tx: any) => {
       // 1. Create transaction
       const txRecord = await this.transactionRepo.create({
-        userId: input.senderId,
+        walletId: input.walletId,
         type: "TRANSFER",
         amount: input.amount,
         reference: input.reference,

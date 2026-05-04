@@ -18,7 +18,7 @@ beforeEach(() => {
 
 const baseInput = {
   key: "idem_123",
-  userId: "user_1",
+  walletId: "user_1",
   payload: { amount: 1000 },
 };
 
@@ -185,18 +185,18 @@ describe("Idempontency Service", () => {
     await expect(
       service.handle({
         key: "",
-        userId: "user_1",
+        walletId: "user_1",
         payload: {},
         handler: vi.fn(),
       }),
     ).rejects.toThrow();
   });
 
-  it("should throw if userId is missing", async () => {
+  it("should throw if walletId is missing", async () => {
     await expect(
       service.handle({
         key: "key",
-        userId: "",
+        walletId: "",
         payload: {},
         handler: vi.fn(),
       }),

@@ -1,18 +1,18 @@
 
 export interface IIdempotencyRepository {
-  find(key: string, userId: string): Promise<any | null>;
+  find(key: string, walletId: string): Promise<any | null>;
 
   create(data: {
     key: string;
-    userId: string;
+    walletId: string;
     requestHash: string;
   }): Promise<void>;
 
-  saveResponse(key: string, userId: string, response: any): Promise<void>;
+  saveResponse(key: string, walletId: string, response: any): Promise<void>;
 
   updateStatus(
     key: string,
-    userId: string,
+    walletId: string,
     status: "PROCESSING" | "COMPLETED" | "FAILED"
   ): Promise<void>;
 }

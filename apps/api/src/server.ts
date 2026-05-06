@@ -2,6 +2,8 @@ import app from "./app.js";
 import prisma from "./prisma.js";
 import dotenv from "dotenv";
 import { container } from "./shared/container/index.js";
+import { startWebhookRetryWorker } from "./services/webhook-retyr-worker.service.js";
+import type { WebhookProcessor } from "./services/webhook-processor.service.js";
 
 dotenv.config();
 
@@ -17,17 +19,13 @@ requiredEnv.forEach((key) => {
 
 const PORT = config.get("PORT");
 
-<<<<<<< HEAD
-// Fetch all users with their posts
-const allUsers = await prisma.user.findMany();
-console.log("All users:", JSON.stringify(allUsers, null, 2));
-=======
+
 
 // 🚀 START WORKER ON APP START
 const webhookProcessor = container.resolve<WebhookProcessor>("webHookRepository");
 
 startWebhookRetryWorker(webhookProcessor);
->>>>>>> c443c4c (feat: build resilient webhook processing system with event logging, retry logic, and failure recovery)
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

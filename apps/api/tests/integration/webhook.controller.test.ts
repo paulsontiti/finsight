@@ -8,6 +8,40 @@ describe("Webhook Controller", () => {
   const controller = new WebhookController({ execute });
   const config = container.resolve<any>("configService");
   const payStackSecret = config.get("PAYSTACK_SECRET");
+<<<<<<< HEAD
+=======
+
+  it("should store webhook event when signature is valid", async () => {
+  const body = {
+    event: "charge.success",
+    data: { reference: "ref_123" }
+  };
+
+  const signature = crypto
+    .createHmac("sha512", payStackSecret)
+    .update(JSON.stringify(body))
+    .digest("hex");
+
+  const req: any = {
+    body,
+    headers: { "x-paystack-signature": signature }
+  };
+
+  const res: any = {
+    sendStatus: vi.fn(),
+    status: vi.fn().mockReturnThis(),
+    send: vi.fn()
+  };
+
+  await controller.handle(req, res);
+
+  expect(webhookRepo.createEvent).toHaveBeenCalledWith(
+    expect.objectContaining({
+      reference: "ref_123"
+    })
+  );
+});
+>>>>>>> c443c4c (feat: build resilient webhook processing system with event logging, retry logic, and failure recovery)
   it("should process valid webhook", async () => {
     const body = { event: "charge.success", data: {} };
 

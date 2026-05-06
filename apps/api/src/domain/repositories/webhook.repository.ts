@@ -7,6 +7,9 @@ export class WebhookRepository {
     reference: string;
     payload: any;
   }) {
+    if(!data.eventType || !data.payload || !data.provider || !data.reference){
+        throw new Error("Invalid input")
+    }
     return this.prisma.webhookEvent.create({
       data: {
         ...data,

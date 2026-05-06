@@ -11,7 +11,7 @@ dotenv.config();
 const config = container.resolve<any>("configService");
 const requiredEnv = ["DATABASE_URL", "JWT_SECRET", "PORT","PAYSTACK_SECRET"];
 requiredEnv.forEach((key) => {
-  console.log(config.get(key))
+  
   if (!process.env[key]) {
     throw new Error(`Missing required env: ${key}`);
   }

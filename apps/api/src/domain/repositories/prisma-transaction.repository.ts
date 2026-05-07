@@ -139,4 +139,18 @@ export class PrismaTransactionRepository implements ITransactionRepository {
       }
     };
   }
+
+ 
+  async getByDateRange(start: string, end: string) {
+    return this.prisma.transaction.findMany({
+      where: {
+        createdAt: {
+          gte: new Date(start),
+          lte: new Date(end)
+        }
+      }
+    });
+  }
+
+
 }

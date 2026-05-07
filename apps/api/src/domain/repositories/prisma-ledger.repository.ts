@@ -20,4 +20,21 @@ export class PrismaLedgerRepository implements ILedgerRepository {
       where: { walletId }
     });
   }
+
+  async getEntriesByDateRange(start: string, end: string) {
+    return this.prisma.ledgerEntry.findMany({
+      where: {
+        createdAt: {
+          gte: new Date(start),
+          lte: new Date(end)
+        }
+      }
+    });
+  }
+
+   async create(data: any) {
+    return this.prisma.ledgerEntry.create({
+      data
+    });
+  }
 }

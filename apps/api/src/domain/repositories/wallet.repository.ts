@@ -6,21 +6,18 @@ export class WalletRepository {
   // 🔍 FIND WALLET BY USER ID
   async findByUserId(userId: string) {
     return this.prisma.wallet.findUnique({
-      where: { userId }
+      where: { userId },
     });
   }
 
   // 💰 CREATE WALLET
-  async create(data: {
-    userId: string;
-    currency?: string;
-  }) {
+  async create(data: { userId: string; currency?: string }) {
     return this.prisma.wallet.create({
       data: {
         userId: data.userId,
         currency: data.currency ?? "NGN",
-        balance: 0
-      }
+        balance: 0,
+      },
     });
   }
 
@@ -30,9 +27,36 @@ export class WalletRepository {
       where: { id: walletId },
       data: {
         balance: newBalance,
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     });
+  }
+
+  // 📊 UPDATE BALANCE (CACHED VALUE)
+  async updateSenderReceiverBalance(
+    senderWalletId: string,
+    senderNewBalance: number,
+    recieverWalletId: string,
+    receiverNewBalance: number,
+  ) {
+    const [senderWallet, receiverWallet] = this.prisma.$transaction([
+      this.prisma.wallet.update({
+        where: { id: senderWalletId },
+        data: {
+          balance: senderNewBalance,
+          updatedAt: new Date(),
+        },
+      }),
+      this.prisma.wallet.update({
+        where: { id: recieverWalletId },
+        data: {
+          balance: receiverNewBalance,
+          updatedAt: new Date(),
+        },
+      }),
+    ]);
+
+    return { senderWallet, receiverWallet };
   }
 
   // ➕ INCREMENT BALANCE (SAFE FUNDING)
@@ -41,10 +65,10 @@ export class WalletRepository {
       where: { id: walletId },
       data: {
         balance: {
-          increment: amount
+          increment: amount,
         },
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     });
   }
 
@@ -54,10 +78,10 @@ export class WalletRepository {
       where: { id: walletId },
       data: {
         balance: {
-          decrement: amount
+          decrement: amount,
         },
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     });
   }
 

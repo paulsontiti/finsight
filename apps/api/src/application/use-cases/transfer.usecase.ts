@@ -1,10 +1,10 @@
 import type { PrismaClient } from "../../../generated/prisma/client.js";
+import type { WalletRepository } from "../../domain/repositories/wallet.repository.js";
 import type {
   ILedgerRepository,
   LedgerEntryProps,
 } from "../../interfaces/ledger-repository.interface.js";
 import type { ITransactionRepository } from "../../interfaces/transaction-repository.interface.js";
-import type { IWalletRepository } from "../../interfaces/wallet-repository.interface.js";
 import type { IdempotencyService } from "../../services/idempotency.service.js";
 import type { UseCase } from "../interfaces/useCase.js";
 
@@ -26,7 +26,7 @@ export class TransferUseCase implements UseCase<
   TransferUsecaseOutputProps
 > {
   constructor(
-    private walletRepo: IWalletRepository,
+    private walletRepo: WalletRepository,
     private transactionRepo: ITransactionRepository,
     private ledgerRepo: ILedgerRepository,
     private idempotencyService: IdempotencyService,
@@ -48,6 +48,12 @@ export class TransferUseCase implements UseCase<
     amount: number;
     reference: string;
   }) {
+    const existing = await this.transactionRepo.findByReference(
+      input.reference,
+    );
+    if (existing) {
+      throw new Error("Duplicate transaction");
+    }
     if (input.amount <= 0) {
       throw new Error("Invalid amount");
     }
@@ -110,22 +116,24 @@ export class TransferUseCase implements UseCase<
       await this.ledgerRepo.createMany(entries);
 
       // 3. Update balances (ATOMIC)
-      const updatedSender = await this.walletRepo.updateBalance(
+      const updatedBalances = await this.walletRepo.updateSenderReceiverBalance(
         senderWallet.id,
         senderWallet.balance - input.amount,
-      );
-
-      const updatedReceiver = await this.walletRepo.updateBalance(
         receiverWallet.id,
         receiverWallet.balance + input.amount,
       );
+
+      // const updatedReceiver = await this.walletRepo.updateBalance(
+      //   receiverWallet.id,
+      //   receiverWallet.balance + input.amount,
+      // );
 
       // 4. Mark success
       await this.transactionRepo.updateStatus(txRecord.id, "SUCCESS");
 
       return {
-        senderBalance: updatedSender.balance,
-        receiverBalance: updatedReceiver.balance,
+        senderBalance: updatedBalances.senderWallet.balance,
+        receiverBalance: updatedBalances.receiverWallet.balance,
         transactionId: txRecord.id,
       };
     });

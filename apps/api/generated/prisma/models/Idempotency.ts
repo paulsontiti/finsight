@@ -28,20 +28,32 @@ export type AggregateIdempotency = {
 export type IdempotencyMinAggregateOutputType = {
   id: string | null
   key: string | null
+  userId: string | null
+  requestHash: string | null
+  status: $Enums.IdempotencyStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type IdempotencyMaxAggregateOutputType = {
   id: string | null
   key: string | null
+  userId: string | null
+  requestHash: string | null
+  status: $Enums.IdempotencyStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type IdempotencyCountAggregateOutputType = {
   id: number
   key: number
+  userId: number
+  requestHash: number
   response: number
+  status: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -49,20 +61,32 @@ export type IdempotencyCountAggregateOutputType = {
 export type IdempotencyMinAggregateInputType = {
   id?: true
   key?: true
+  userId?: true
+  requestHash?: true
+  status?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type IdempotencyMaxAggregateInputType = {
   id?: true
   key?: true
+  userId?: true
+  requestHash?: true
+  status?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type IdempotencyCountAggregateInputType = {
   id?: true
   key?: true
+  userId?: true
+  requestHash?: true
   response?: true
+  status?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -141,8 +165,12 @@ export type IdempotencyGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type IdempotencyGroupByOutputType = {
   id: string
   key: string
-  response: runtime.JsonValue
+  userId: string
+  requestHash: string
+  response: runtime.JsonValue | null
+  status: $Enums.IdempotencyStatus
   createdAt: Date
+  updatedAt: Date
   _count: IdempotencyCountAggregateOutputType | null
   _min: IdempotencyMinAggregateOutputType | null
   _max: IdempotencyMaxAggregateOutputType | null
@@ -169,32 +197,49 @@ export type IdempotencyWhereInput = {
   NOT?: Prisma.IdempotencyWhereInput | Prisma.IdempotencyWhereInput[]
   id?: Prisma.StringFilter<"Idempotency"> | string
   key?: Prisma.StringFilter<"Idempotency"> | string
-  response?: Prisma.JsonFilter<"Idempotency">
+  userId?: Prisma.StringFilter<"Idempotency"> | string
+  requestHash?: Prisma.StringFilter<"Idempotency"> | string
+  response?: Prisma.JsonNullableFilter<"Idempotency">
+  status?: Prisma.EnumIdempotencyStatusFilter<"Idempotency"> | $Enums.IdempotencyStatus
   createdAt?: Prisma.DateTimeFilter<"Idempotency"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Idempotency"> | Date | string
 }
 
 export type IdempotencyOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   key?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  requestHash?: Prisma.SortOrder
   response?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type IdempotencyWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  key?: string
+  key_userId?: Prisma.IdempotencyKeyUserIdCompoundUniqueInput
   AND?: Prisma.IdempotencyWhereInput | Prisma.IdempotencyWhereInput[]
   OR?: Prisma.IdempotencyWhereInput[]
   NOT?: Prisma.IdempotencyWhereInput | Prisma.IdempotencyWhereInput[]
-  response?: Prisma.JsonFilter<"Idempotency">
+  key?: Prisma.StringFilter<"Idempotency"> | string
+  userId?: Prisma.StringFilter<"Idempotency"> | string
+  requestHash?: Prisma.StringFilter<"Idempotency"> | string
+  response?: Prisma.JsonNullableFilter<"Idempotency">
+  status?: Prisma.EnumIdempotencyStatusFilter<"Idempotency"> | $Enums.IdempotencyStatus
   createdAt?: Prisma.DateTimeFilter<"Idempotency"> | Date | string
-}, "id" | "key">
+  updatedAt?: Prisma.DateTimeFilter<"Idempotency"> | Date | string
+}, "id" | "key_userId">
 
 export type IdempotencyOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   key?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  requestHash?: Prisma.SortOrder
   response?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.IdempotencyCountOrderByAggregateInput
   _max?: Prisma.IdempotencyMaxOrderByAggregateInput
   _min?: Prisma.IdempotencyMinOrderByAggregateInput
@@ -206,72 +251,125 @@ export type IdempotencyScalarWhereWithAggregatesInput = {
   NOT?: Prisma.IdempotencyScalarWhereWithAggregatesInput | Prisma.IdempotencyScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Idempotency"> | string
   key?: Prisma.StringWithAggregatesFilter<"Idempotency"> | string
-  response?: Prisma.JsonWithAggregatesFilter<"Idempotency">
+  userId?: Prisma.StringWithAggregatesFilter<"Idempotency"> | string
+  requestHash?: Prisma.StringWithAggregatesFilter<"Idempotency"> | string
+  response?: Prisma.JsonNullableWithAggregatesFilter<"Idempotency">
+  status?: Prisma.EnumIdempotencyStatusWithAggregatesFilter<"Idempotency"> | $Enums.IdempotencyStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Idempotency"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Idempotency"> | Date | string
 }
 
 export type IdempotencyCreateInput = {
   id?: string
   key: string
-  response: runtime.InputJsonValue
+  userId: string
+  requestHash: string
+  response?: runtime.InputJsonValue | null
+  status: $Enums.IdempotencyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type IdempotencyUncheckedCreateInput = {
   id?: string
   key: string
-  response: runtime.InputJsonValue
+  userId: string
+  requestHash: string
+  response?: runtime.InputJsonValue | null
+  status: $Enums.IdempotencyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type IdempotencyUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
-  response?: runtime.InputJsonValue | runtime.InputJsonValue
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  requestHash?: Prisma.StringFieldUpdateOperationsInput | string
+  response?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  status?: Prisma.EnumIdempotencyStatusFieldUpdateOperationsInput | $Enums.IdempotencyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type IdempotencyUncheckedUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
-  response?: runtime.InputJsonValue | runtime.InputJsonValue
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  requestHash?: Prisma.StringFieldUpdateOperationsInput | string
+  response?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  status?: Prisma.EnumIdempotencyStatusFieldUpdateOperationsInput | $Enums.IdempotencyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type IdempotencyCreateManyInput = {
   id?: string
   key: string
-  response: runtime.InputJsonValue
+  userId: string
+  requestHash: string
+  response?: runtime.InputJsonValue | null
+  status: $Enums.IdempotencyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type IdempotencyUpdateManyMutationInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
-  response?: runtime.InputJsonValue | runtime.InputJsonValue
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  requestHash?: Prisma.StringFieldUpdateOperationsInput | string
+  response?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  status?: Prisma.EnumIdempotencyStatusFieldUpdateOperationsInput | $Enums.IdempotencyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type IdempotencyUncheckedUpdateManyInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
-  response?: runtime.InputJsonValue | runtime.InputJsonValue
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  requestHash?: Prisma.StringFieldUpdateOperationsInput | string
+  response?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  status?: Prisma.EnumIdempotencyStatusFieldUpdateOperationsInput | $Enums.IdempotencyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type IdempotencyKeyUserIdCompoundUniqueInput = {
+  key: string
+  userId: string
 }
 
 export type IdempotencyCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   key?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  requestHash?: Prisma.SortOrder
   response?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type IdempotencyMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   key?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  requestHash?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type IdempotencyMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   key?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  requestHash?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type EnumIdempotencyStatusFieldUpdateOperationsInput = {
+  set?: $Enums.IdempotencyStatus
 }
 
 
@@ -279,8 +377,12 @@ export type IdempotencyMinOrderByAggregateInput = {
 export type IdempotencySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   key?: boolean
+  userId?: boolean
+  requestHash?: boolean
   response?: boolean
+  status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["idempotency"]>
 
 
@@ -288,11 +390,15 @@ export type IdempotencySelect<ExtArgs extends runtime.Types.Extensions.InternalA
 export type IdempotencySelectScalar = {
   id?: boolean
   key?: boolean
+  userId?: boolean
+  requestHash?: boolean
   response?: boolean
+  status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type IdempotencyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "key" | "response" | "createdAt", ExtArgs["result"]["idempotency"]>
+export type IdempotencyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "key" | "userId" | "requestHash" | "response" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["idempotency"]>
 
 export type $IdempotencyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Idempotency"
@@ -300,8 +406,12 @@ export type $IdempotencyPayload<ExtArgs extends runtime.Types.Extensions.Interna
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     key: string
-    response: runtime.JsonValue
+    userId: string
+    requestHash: string
+    response: runtime.JsonValue | null
+    status: $Enums.IdempotencyStatus
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["idempotency"]>
   composites: {}
 }
@@ -696,8 +806,12 @@ export interface Prisma__IdempotencyClient<T, Null = never, ExtArgs extends runt
 export interface IdempotencyFieldRefs {
   readonly id: Prisma.FieldRef<"Idempotency", 'String'>
   readonly key: Prisma.FieldRef<"Idempotency", 'String'>
+  readonly userId: Prisma.FieldRef<"Idempotency", 'String'>
+  readonly requestHash: Prisma.FieldRef<"Idempotency", 'String'>
   readonly response: Prisma.FieldRef<"Idempotency", 'Json'>
+  readonly status: Prisma.FieldRef<"Idempotency", 'IdempotencyStatus'>
   readonly createdAt: Prisma.FieldRef<"Idempotency", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Idempotency", 'DateTime'>
 }
     
 

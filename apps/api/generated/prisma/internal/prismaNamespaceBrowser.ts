@@ -118,7 +118,8 @@ export const WalletScalarFieldEnum = {
   balance: 'balance',
   currency: 'currency',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  version: 'version'
 } as const
 
 export type WalletScalarFieldEnum = (typeof WalletScalarFieldEnum)[keyof typeof WalletScalarFieldEnum]
@@ -165,8 +166,12 @@ export type SavingsPlanScalarFieldEnum = (typeof SavingsPlanScalarFieldEnum)[key
 export const IdempotencyScalarFieldEnum = {
   id: 'id',
   key: 'key',
+  userId: 'userId',
+  requestHash: 'requestHash',
   response: 'response',
-  createdAt: 'createdAt'
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type IdempotencyScalarFieldEnum = (typeof IdempotencyScalarFieldEnum)[keyof typeof IdempotencyScalarFieldEnum]

@@ -48,94 +48,134 @@ export class TransferUseCase implements UseCase<
     amount: number;
     reference: string;
   }) {
-    const existing = await this.transactionRepo.findByReference(
-      input.reference,
-    );
-    if (existing) {
-      throw new Error("Duplicate transaction");
-    }
-    if (input.amount <= 0) {
-      throw new Error("Invalid amount");
-    }
-
-    if (input.walletId === input.receiverWalletId) {
-      throw new Error("Cannot transfer to self");
-    }
-
-    const [senderWallet, receiverWallet] = await Promise.all([
-      this.walletRepo.findByUserId(input.walletId),
-      this.walletRepo.findByUserId(input.receiverWalletId),
-    ]);
-
-    if (!senderWallet || !receiverWallet) {
-      throw new Error("Wallet not found");
-    }
-
-    if (senderWallet.balance < input.amount) {
-      throw new Error("Insufficient balance");
-    }
-
-    return this.prisma.$transaction(async (tx: any) => {
-      // 1. Create transaction
-      const txRecord = await this.transactionRepo.create({
-        walletId: input.walletId,
-        type: "TRANSFER",
-        amount: input.amount,
-        reference: input.reference,
-      });
-
-      // 2. Ledger entries (4 entries)
-      const entries: LedgerEntryProps[] = [
-        // Sender
-        {
-          walletId: senderWallet.id,
-          transactionId: txRecord.id,
-          type: "DEBIT",
-          amount: input.amount,
-        },
-        // {
-        //   walletId: "SYSTEM_ACCOUNT",
-        //   transactionId: txRecord.id,
-        //   type: "CREDIT" as const,
-        //   amount: input.amount,
-        // },
-        // {
-        //   walletId: "SYSTEM_ACCOUNT",
-        //   transactionId: txRecord.id,
-        //   type: "DEBIT" as const,
-        //   amount: input.amount,
-        // },
-        {
-          walletId: receiverWallet.id,
-          transactionId: txRecord.id,
-          type: "CREDIT",
-          amount: input.amount,
-        },
-      ];
-
-      await this.ledgerRepo.createMany(entries);
-
-      // 3. Update balances (ATOMIC)
-      const updatedBalances = await this.walletRepo.updateSenderReceiverBalance(
-        senderWallet.id,
-        senderWallet.balance - input.amount,
-        receiverWallet.id,
-        receiverWallet.balance + input.amount,
+    try {
+      const existing = await this.transactionRepo.findByReference(
+        input.reference,
       );
+      if (existing) {
+        throw new Error("Duplicate transaction");
+      }
+      if (input.amount <= 0) {
+        throw new Error("Invalid amount");
+      }
 
-      // const updatedReceiver = await this.walletRepo.updateBalance(
-      //   receiverWallet.id,
-      //   receiverWallet.balance + input.amount,
-      // );
+      if (input.walletId === input.receiverWalletId) {
+        throw new Error("Cannot transfer to self");
+      }
 
-      // 4. Mark success
-      await this.transactionRepo.updateStatus(txRecord.id, "SUCCESS");
+      let senderWallet: any;
+      let receiverWallet: any;
 
-      return {
-        senderBalance: updatedBalances.senderWallet.balance,
-        receiverBalance: updatedBalances.receiverWallet.balance,
-        transactionId: txRecord.id,
-      };
-    });
+      const data = await this.walletRepo.getSenderReceiverWallets(
+        input.walletId,
+        input.receiverWalletId,
+      );
+      senderWallet = data.senderWallet;
+      receiverWallet = data.receiverWallet;
+
+      if (!senderWallet || !receiverWallet) {
+        throw new Error("Wallet not found");
+      }
+      if (senderWallet.balance < input.amount) {
+        throw new Error("Insufficient balance");
+      }
+
+      return this.prisma.$transaction(async (tx: any) => {
+        // 1. Create transaction
+        const txRecord = await this.transactionRepo.create({
+          walletId: input.walletId,
+          type: "TRANSFER",
+          amount: input.amount,
+          reference: input.reference,
+        });
+
+        // 2. Ledger entries (4 entries)
+        const entries: LedgerEntryProps[] = [
+          // Sender
+          {
+            walletId: senderWallet.id,
+            transactionId: txRecord.id,
+            type: "DEBIT",
+            amount: input.amount,
+          },
+          // {
+          //   walletId: "SYSTEM_ACCOUNT",
+          //   transactionId: txRecord.id,
+          //   type: "CREDIT" as const,
+          //   amount: input.amount,
+          // },
+          // {
+          //   walletId: "SYSTEM_ACCOUNT",
+          //   transactionId: txRecord.id,
+          //   type: "DEBIT" as const,
+          //   amount: input.amount,
+          // },
+          {
+            walletId: receiverWallet.id,
+            transactionId: txRecord.id,
+            type: "CREDIT",
+            amount: input.amount,
+          },
+        ];
+
+        await this.ledgerRepo.createMany(entries);
+
+        // 3. Update balances (ATOMIC)
+        try {
+          const debitResult = await this.walletRepo.safeDebit(
+            input.walletId,
+            input.amount,
+            senderWallet.version,
+          );
+          if (!debitResult || debitResult.count === 0) {
+            throw new Error("Concurrent update or insufficient balance");
+          }
+        } catch (err: any) {
+          throw new Error(err.message);
+        }
+
+        const creditResult = await this.walletRepo.safeCredit(
+          input.receiverWalletId,
+          input.amount,
+          receiverWallet.version,
+        );
+
+        if (!creditResult || creditResult.count === 0) {
+          throw new Error("Receiver wallet modified concurrently");
+        }
+
+        const updatedSender = await this.walletRepo.findById(input.walletId);
+        // tx.wallet.findUnique({
+        //   where: {
+        //     id: senderWallet.id,
+        //   },
+        // });
+
+        const updatedReceiver = await this.walletRepo.findById(
+          input.receiverWalletId,
+        );
+        // const updatedBalances = await this.walletRepo.safeTransfer(
+        //   senderWallet.id,
+        //   receiverWallet.id,
+        //   input.amount,
+        // );
+
+        // const updatedReceiver = await this.walletRepo.updateBalance(
+        //   receiverWallet.id,
+        //   receiverWallet.balance + input.amount,
+        // );
+
+        // 4. Mark success
+        await this.transactionRepo.updateStatus(txRecord.id, "SUCCESS");
+
+        return {
+          senderBalance: updatedSender.balance,
+          receiverBalance: updatedReceiver.balance,
+          transactionId: txRecord.id,
+        };
+      });
+    } catch (err: any) {
+      throw new Error(err.message);
+    }
   }
 }

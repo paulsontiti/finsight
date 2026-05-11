@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx --watch src/server.ts",
+    "dev:worker": "tsx --watch src/infrastructure/workers/webhook.worker.ts",
     "test": "vitest",
     "test:watch": "vitest watch",
     "build": "tsc"
@@ -29,11 +30,13 @@
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "bullmq": "^5.76.7",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^16.0.3",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
+    "ioredis": "^5.10.1",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "prisma": "6.19"

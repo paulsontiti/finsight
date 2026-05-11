@@ -8,6 +8,7 @@ export class PaymentUseCase {
   ) {}
 
   async execute(data: any) {
+    console.log("Paymen")
     const reference = data.reference;
     const amount = data.amount / 100; // convert from kobo
     const userId = data.metadata.userId;

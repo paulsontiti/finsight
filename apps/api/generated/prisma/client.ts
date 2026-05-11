@@ -92,3 +92,8 @@ export type SavingsPlan = Prisma.SavingsPlanModel
  * ///////////////////
  */
 export type Idempotency = Prisma.IdempotencyModel
+/**
+ * Model UserSession
+ * 
+ */
+export type UserSession = Prisma.UserSessionModel

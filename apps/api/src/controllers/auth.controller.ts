@@ -1,4 +1,4 @@
-import type { NextFunction, Request, Response } from "express";
+import type { Request, Response } from "express";
 import { container } from "../shared/container/index.js";
 import type { RegisterUserUseCase } from "../application/use-cases/register-user.usecase.js";
 import type { LoginUserUseCase } from "../application/use-cases/login-user.usecase.js";
@@ -6,10 +6,7 @@ import type { RefreshTokenUseCase } from "../application/use-cases/refresh-token
 import {
   InvalidCredentialsError,
   UnauthorizedError,
-  UserNotFoundError,
 } from "../shared/erors/domain.errors.js";
-import type { VerifyEmailUseCase } from "../application/use-cases/verify-email.usecase.js";
-import { DatabaseError } from "../shared/erors/system.error.js";
 
 export class AuthController {
   async register(req: Request, res: Response) {
@@ -24,8 +21,17 @@ export class AuthController {
 
   async login(req: Request, res: Response) {
     const useCase = container.resolve<LoginUserUseCase>("loginUserUseCase");
+      const ip =
+    req.headers["x-forwarded-for"] ||    req.socket.remoteAddress;
 
-    const result = await useCase.execute(req.body);
+   
+  const userAgent =
+    req.headers["user-agent"] as string;
+
+  const { email, password, deviceId } =
+    req.body;
+
+    const result = await useCase.execute({ip:ip as string,userAgent,email,password,deviceId});
 
     res.cookie("refreshToken", result.refreshToken, {
       httpOnly: true, // prevents JS access

@@ -18,4 +18,8 @@ export interface ITransactionRepository {
     fromDate?: Date;
     toDate?: Date;
   }): Promise<any>;
+
+  countRecentByUser(userId:string,seconds:number):Promise<any | null>
+  getUserAverageAmount(userId:string):Promise<any | null>
+  findRecentTransfers(userId:string):Promise<any | null>
 }

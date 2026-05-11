@@ -1,17 +1,19 @@
 import type { Request } from "express";
 import type { Role } from "../../../generated/prisma/enums.js";
 
-
 export type EmailVerificaionProp = { userId: string; email: string };
 
 export type RegisterLoginUserDTO = {
   email: string;
   password: string;
+  deviceId: string;
+  ip: string;
+  userAgent?: string;
 };
 
 export interface UserPayload {
   userId: string;
-  role:Role
+  role: Role;
 }
 
 export type UserApiResponse = {
@@ -30,9 +32,12 @@ export interface IGenerator {
   generate(): string;
 }
 
-export interface IUserRepository extends Repository<CreateUserProps,DBUserProps> {
+export interface IUserRepository extends Repository<
+  CreateUserProps,
+  DBUserProps
+> {
   findByEmail(email: string): Promise<DBUserProps | null>;
-  update(id:string,data: any): Promise<void>;
+  update(id: string, data: any): Promise<void>;
 }
 
 export interface AuthRequest extends Request {
@@ -52,7 +57,7 @@ export interface DBUserProps {
   createdAt: Date;
   updatedAt: Date;
   role: Role;
-  isVerified:Boolean
+  isVerified: Boolean;
 }
 
 export interface CreateRefreshTokenProps {
@@ -80,7 +85,10 @@ export interface CreateApiKeyProps {
   ownerId: string;
 }
 
-export interface IApiKeyRepository extends Repository<CreateApiKeyProps,DBUserProps> {
+export interface IApiKeyRepository extends Repository<
+  CreateApiKeyProps,
+  DBUserProps
+> {
   findByKey(key: string): Promise<CreateApiKeyProps>;
 }
 export interface IHashService {
@@ -88,7 +96,7 @@ export interface IHashService {
   compare(password: string, hash: string): Promise<boolean>;
 }
 
-export interface Repository<Input,Output> {
+export interface Repository<Input, Output> {
   create(entity: Input): Promise<Output>;
   findById(id: string): Promise<Output | null>;
 }

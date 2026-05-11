@@ -13,6 +13,7 @@ import type { UseCase } from "../interfaces/useCase.js";
 import type { RefreshTokenService } from "../../services/refresh-token.service.js";
 import { DatabaseError } from "../../shared/erors/system.error.js";
 import { CreateUserEntity } from "../../domain/entities/user.entity.js";
+import type { SaveUserSessionUseCase } from "./saveUserSession.usecase.js";
 
 export class LoginUserUseCase implements UseCase<
   RegisterLoginUserDTO,
@@ -20,6 +21,7 @@ export class LoginUserUseCase implements UseCase<
 > {
   constructor(
     private readonly userRepository: IUserRepository,
+    private readonly saveUserSessionUseCase: SaveUserSessionUseCase,
     private readonly hashService: IHashService,
     private readonly tokenService: ITokenService,
     private readonly refreshTokenService: RefreshTokenService,
@@ -31,10 +33,10 @@ export class LoginUserUseCase implements UseCase<
     }
 
     let loginUserEntity;
-    try{
-      loginUserEntity = new CreateUserEntity(data)
-    }catch(err:any){
-      throw new InvalidCredentialsError()
+    try {
+      loginUserEntity = new CreateUserEntity(data);
+    } catch (err: any) {
+      throw new InvalidCredentialsError();
     }
     // 1. Normalize email
     //const email = data.email.trim().toLowerCase();
@@ -56,6 +58,14 @@ export class LoginUserUseCase implements UseCase<
       throw new InvalidCredentialsError();
     }
 
+    //save user session
+    await this.saveUserSessionUseCase.execute({
+      userId: user.id,
+      deviceId: data.deviceId,
+      ip: data.ip,
+      userAgent: data.userAgent as string,
+    });
+
     // 4. Generate token
 
     const accessToken = this.tokenService.signAccessToken({
@@ -75,7 +85,7 @@ export class LoginUserUseCase implements UseCase<
         new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       );
     } catch (err: any) {
-      throw new DatabaseError(err.message)
+      throw new DatabaseError(err.message);
     }
 
     // 5. Return response

@@ -59,6 +59,7 @@ model User {
   refreshTokens      RefreshToken[]
   verificationToken  VerificationToken?
   passwordResetToken PasswordResetToken?
+  userSessions       UserSession[]
 }
 
 //////////////////////
@@ -142,7 +143,6 @@ model Transaction {
   ledgerEntries LedgerEntry[]
 
   @@index([walletId, createdAt])
-
 }
 
 //////////////////////
@@ -184,14 +184,14 @@ model SavingsPlan {
 // IDEMPOTENCY
 //////////////////////
 model Idempotency {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  key           String
-  userId        String
-  requestHash   String
-  response      Json?
-  status        IdempotencyStatus   // PROCESSING | COMPLETED | FAILED
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  key         String
+  userId      String
+  requestHash String
+  response    Json?
+  status      IdempotencyStatus // PROCESSING | COMPLETED | FAILED
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 
   @@unique([key, userId])
 }
@@ -200,4 +200,29 @@ enum IdempotencyStatus {
   PROCESSING
   COMPLETED
   FAILED
+}
+
+model UserSession {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId    String
+  deviceId  String
+  ip        String
+  userAgent String?
+
+  //  Session state
+  isActive Boolean @default(true)
+
+  //  Tracking
+  createdAt    DateTime  @default(now())
+  lastActiveAt DateTime  @default(now())
+  expiresAt    DateTime?
+
+  // 🔗 Relation (optional but recommended)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([deviceId])
+  @@index([ip])
+  @@index([userId, deviceId])
 }

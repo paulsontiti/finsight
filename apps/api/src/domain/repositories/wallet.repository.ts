@@ -3,6 +3,36 @@ import { PrismaClient } from "@prisma/client";
 export class WalletRepository {
   constructor(private prisma: PrismaClient) {}
 
+  // 🌍 GET ALL KNOWN DEVICES FOR USER
+  async getKnownDevices(userId: string) {
+    const sessions = await this.prisma.userSession.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        deviceId: true,
+      },
+      distinct: ["deviceId"],
+    });
+
+    return sessions.map((s: any) => s.deviceId).filter(Boolean);
+  }
+
+  // 🌍 GET ALL KNOWN IP ADDRESSES FOR USER
+  async getKnownIps(userId: string) {
+    const sessions = await this.prisma.userSession.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        ip: true,
+      },
+      distinct: ["ip"],
+    });
+
+    return sessions.map((s: any) => s.ip).filter(Boolean);
+  }
+
   // =========================================================
   //  FIND WALLET
   // =========================================================

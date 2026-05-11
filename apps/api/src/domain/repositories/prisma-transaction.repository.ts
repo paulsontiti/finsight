@@ -42,6 +42,63 @@ import type { ITransactionRepository } from "../../interfaces/transaction-reposi
 export class PrismaTransactionRepository implements ITransactionRepository {
   constructor(private prisma: PrismaClient) {}
 
+  // 🚀 1. COUNT RECENT TRANSACTIONS (VELOCITY CHECK)
+  async countRecentByUser(userId: string, seconds: number) {
+    const since = new Date(
+      Date.now() - seconds * 1000,
+    );
+
+    return this.prisma.transaction.count({
+      where: {
+        walletId: userId,
+        createdAt: {
+          gte: since,
+        },
+      },
+    });
+  }
+
+  // 💰 2. GET USER AVERAGE TRANSACTION AMOUNT
+  async getUserAverageAmount(userId: string) {
+    const result =
+      await this.prisma.transaction.aggregate({
+        where: {
+          walletId: userId,
+        },
+        _avg: {
+          amount: true,
+        },
+      });
+
+    return result._avg.amount ?? 0;
+  }
+
+  // 🔁 3. FIND RECENT TRANSFERS (CIRCULAR DETECTION)
+  async findRecentTransfers(userId: string) {
+    const since = new Date(
+      Date.now() - 24 * 60 * 60 * 1000,
+    ); // last 24 hours
+
+    return this.prisma.transaction.findMany({
+      where: {
+        walletId: userId,
+        createdAt: {
+          gte: since,
+        },
+        type: "TRANSFER",
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        walletId: true,
+        amount: true,
+        createdAt: true,
+      },
+    });
+  }
+
+
   // =========================
   // 🟢 CREATE
   // =========================

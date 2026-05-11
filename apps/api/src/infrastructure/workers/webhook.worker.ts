@@ -7,21 +7,27 @@ import { container } from "../../shared/container/index.js";
 
 const paymentUseCase = container.resolve<PaymentUseCase>("paymentUseCase");
 
+export const processWebhookJob = async (
+  job: any,
+  paymentUseCase: PaymentUseCase,
+) => {
+  const event = job.data?.event;
+
+  if (!event) {
+    throw new Error("Invalid webhook payload");
+  }
+
+  if (event.event === "charge.success") {
+    await paymentUseCase.execute(event.data);
+  }
+};
+
 export const webhookWorker = new Worker(
   "webhook-processing",
 
-  async (job) => {
-    const event = job.data.event;
-
-    console.log("Processing webhook:", event.event);
-
-    // Execute business logic here
-    if (event.eventType === "charge.success") {
-          await paymentUseCase.execute(
-            event.payload.data
-          );
-        }
-  },
+ async (job) => {
+  await processWebhookJob(job, paymentUseCase);
+},
 
   {
     connection: redis,

@@ -1,5 +1,6 @@
 import { beforeEach, describe, it, expect, vi } from "vitest";
 import { TransferUseCase } from "../../src/application/use-cases/transfer.usecase";
+import { AuditService } from "../../src/services/audit.service";
 
 let walletRepo: any;
 let transactionRepo: any;
@@ -8,6 +9,7 @@ let idempotencyService: any;
 let prisma: any;
 
 let useCase: TransferUseCase;
+let auditService: any;
 
 beforeEach(() => {
   walletRepo = {
@@ -45,12 +47,16 @@ beforeEach(() => {
     $transaction: vi.fn((cb: any) => cb({})),
   };
 
+  auditService = {
+    log: vi.fn(),
+  };
+
   useCase = new TransferUseCase(
     walletRepo,
     transactionRepo,
     ledgerRepo,
     idempotencyService,
-    prisma,
+    prisma,auditService
   );
 });
 
@@ -479,7 +485,6 @@ describe("Transfer Usecase", () => {
     walletRepo.safeCredit.mockResolvedValue(true);
     transactionRepo.create.mockResolvedValue({ id: "tx_1" });
 
-  
     await useCase.execute(validInput);
 
     const entries = ledgerRepo.createMany.mock.calls[0][0];

@@ -4,7 +4,6 @@ import { deadLetterQueue } from "../queue/queues.js";
 import { PaymentUseCase } from "../../application/use-cases/payment.usecase.js";
 import { container } from "../../shared/container/index.js";
 
-
 const paymentUseCase = container.resolve<PaymentUseCase>("paymentUseCase");
 
 export const processWebhookJob = async (
@@ -25,9 +24,24 @@ export const processWebhookJob = async (
 export const webhookWorker = new Worker(
   "webhook-processing",
 
- async (job) => {
-  await processWebhookJob(job, paymentUseCase);
-},
+  async (job) => {
+    try {
+      await processWebhookJob(job, paymentUseCase);
+    } catch (error: any) {
+      // MOVE TO DLQ
+      await deadLetterQueue.add(
+        "failed-webhook",
+
+        {
+          originalJob: job.data,
+
+          reason: error.message,
+        },
+      );
+
+      throw error;
+    }
+  },
 
   {
     connection: redis,

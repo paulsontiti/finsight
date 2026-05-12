@@ -14,7 +14,19 @@ export class PrismaLedgerRepository implements ILedgerRepository {
       data: entries
     });
   }
+ async findByTransaction(
+    transactionId: string,
+  ) {
+    return this.prisma.ledgerEntry.findMany({
+      where: {
+        transactionId,
+      },
 
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+  }
   async findByWalletId(walletId: string) {
     return this.prisma.ledgerEntry.findMany({
       where: { walletId }

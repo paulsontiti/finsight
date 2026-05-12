@@ -60,6 +60,7 @@ model User {
   verificationToken  VerificationToken?
   passwordResetToken PasswordResetToken?
   userSessions       UserSession[]
+  auditLogs          AuditLog[]
 }
 
 //////////////////////
@@ -225,4 +226,30 @@ model UserSession {
   @@index([deviceId])
   @@index([ip])
   @@index([userId, deviceId])
+}
+
+model AuditLog {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId     String?
+  action     String
+  entityType String
+  entityId   String?
+
+  metadata Json?
+
+  ip        String?
+  deviceId  String?
+  userAgent String?
+
+  status String @default("SUCCESS")
+
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([action])
+  @@index([entityType])
+  @@index([createdAt])
 }

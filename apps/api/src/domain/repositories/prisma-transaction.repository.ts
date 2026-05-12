@@ -1,52 +1,79 @@
 import { PrismaClient } from "@prisma/client";
 import type { ITransactionRepository } from "../../interfaces/transaction-repository.interface.js";
 
-// export class PrismaTransactionRepository implements ITransactionRepository {
-//   constructor(private prisma: PrismaClient) {}
-
-//   async create(data: {
-//     userId: string;
-//     type: string;
-//     amount: number;
-//     reference: string;
-//   }) {
-//     const tx = await this.prisma.transaction.create({
-//       data: {
-//         userId: data.userId,
-//         type: data.type,
-//         amount: data.amount,
-//         reference: data.reference,
-//         status: "PENDING"
-//       }
-//     });
-
-//     return { id: tx.id };
-//   }
-
-//   async updateStatus(id: string, status: "PENDING" | "SUCCESS" | "FAILED") {
-//     await this.prisma.transaction.update({
-//       where: { id },
-//       data: { status }
-//     });
-//   }
-
-//   async findByReference(reference: string) {
-//     return this.prisma.transaction.findUnique({
-//       where: { reference }
-//     });
-//   }
-// }
-
-
-
 export class PrismaTransactionRepository implements ITransactionRepository {
   constructor(private prisma: PrismaClient) {}
 
+   // 🔍 FIND PENDING TRANSACTIONS
+  async findPending() {
+    return this.prisma.transaction.findMany({
+      where: {
+        status: "PENDING",
+      },
+
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+  }
+
+
+  async findAll() {
+    return this.prisma.transaction.findMany();
+  }
+
+  async findByUser(userId: string) {
+    return this.prisma.transaction.findMany({
+      where: {
+        userId,
+      },
+    });
+  }
+  async getByDate(date: Date) {
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+
+    return this.prisma.transaction.findMany({
+      where: {
+        createdAt: {
+          gte: start,
+          lte: end,
+        },
+      },
+    });
+  }
+
+  async getMonthlyStats(month: number, year: number) {
+    const start = new Date(year, month - 1, 1);
+
+    const end = new Date(year, month, 0, 23, 59, 59);
+
+    return this.prisma.transaction.aggregate({
+      where: {
+        createdAt: {
+          gte: start,
+          lte: end,
+        },
+      },
+
+      _sum: {
+        amount: true,
+      },
+
+      _count: true,
+
+      _avg: {
+        amount: true,
+      },
+    });
+  }
+
   // 🚀 1. COUNT RECENT TRANSACTIONS (VELOCITY CHECK)
   async countRecentByUser(userId: string, seconds: number) {
-    const since = new Date(
-      Date.now() - seconds * 1000,
-    );
+    const since = new Date(Date.now() - seconds * 1000);
 
     return this.prisma.transaction.count({
       where: {
@@ -60,24 +87,21 @@ export class PrismaTransactionRepository implements ITransactionRepository {
 
   // 💰 2. GET USER AVERAGE TRANSACTION AMOUNT
   async getUserAverageAmount(userId: string) {
-    const result =
-      await this.prisma.transaction.aggregate({
-        where: {
-          walletId: userId,
-        },
-        _avg: {
-          amount: true,
-        },
-      });
+    const result = await this.prisma.transaction.aggregate({
+      where: {
+        walletId: userId,
+      },
+      _avg: {
+        amount: true,
+      },
+    });
 
     return result._avg.amount ?? 0;
   }
 
   // 🔁 3. FIND RECENT TRANSFERS (CIRCULAR DETECTION)
   async findRecentTransfers(userId: string) {
-    const since = new Date(
-      Date.now() - 24 * 60 * 60 * 1000,
-    ); // last 24 hours
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000); // last 24 hours
 
     return this.prisma.transaction.findMany({
       where: {
@@ -98,7 +122,6 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     });
   }
 
-
   // =========================
   // 🟢 CREATE
   // =========================
@@ -116,8 +139,8 @@ export class PrismaTransactionRepository implements ITransactionRepository {
         amount: data.amount,
         reference: data.reference,
         description: data.description,
-        status: "PENDING"
-      }
+        status: "PENDING",
+      },
     });
 
     return { id: tx.id };
@@ -126,13 +149,10 @@ export class PrismaTransactionRepository implements ITransactionRepository {
   // =========================
   // 🔄 UPDATE STATUS
   // =========================
-  async updateStatus(
-    id: string,
-    status: "PENDING" | "SUCCESS" | "FAILED"
-  ) {
+  async updateStatus(id: string, status: "PENDING" | "SUCCESS" | "FAILED") {
     await this.prisma.transaction.update({
       where: { id },
-      data: { status }
+      data: { status },
     });
   }
 
@@ -141,7 +161,7 @@ export class PrismaTransactionRepository implements ITransactionRepository {
   // =========================
   async findByReference(reference: string) {
     return this.prisma.transaction.findUnique({
-      where: { reference }
+      where: { reference },
     });
   }
 
@@ -162,7 +182,7 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     const skip = (page - 1) * limit;
 
     const where: any = {
-      walletId
+      walletId,
     };
 
     if (type) where.type = type;
@@ -180,10 +200,10 @@ export class PrismaTransactionRepository implements ITransactionRepository {
         skip,
         take: limit,
         orderBy: {
-          createdAt: "desc"
-        }
+          createdAt: "desc",
+        },
       }),
-      this.prisma.transaction.count({ where })
+      this.prisma.transaction.count({ where }),
     ]);
 
     return {
@@ -192,22 +212,19 @@ export class PrismaTransactionRepository implements ITransactionRepository {
         total,
         page,
         limit,
-        totalPages: Math.ceil(total / limit)
-      }
+        totalPages: Math.ceil(total / limit),
+      },
     };
   }
 
- 
   async getByDateRange(start: string, end: string) {
     return this.prisma.transaction.findMany({
       where: {
         createdAt: {
           gte: new Date(start),
-          lte: new Date(end)
-        }
-      }
+          lte: new Date(end),
+        },
+      },
     });
   }
-
-
 }

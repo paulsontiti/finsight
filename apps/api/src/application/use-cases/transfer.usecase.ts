@@ -5,6 +5,7 @@ import type {
   LedgerEntryProps,
 } from "../../interfaces/ledger-repository.interface.js";
 import type { ITransactionRepository } from "../../interfaces/transaction-repository.interface.js";
+import type { AuditService } from "../../services/audit.service.js";
 import type { IdempotencyService } from "../../services/idempotency.service.js";
 import type { UseCase } from "../interfaces/useCase.js";
 
@@ -31,6 +32,7 @@ export class TransferUseCase implements UseCase<
     private ledgerRepo: ILedgerRepository,
     private idempotencyService: IdempotencyService,
     private prisma: PrismaClient,
+    private auditService: AuditService,
   ) {}
 
   async execute(input: TransferUsecaseInputProps) {
@@ -47,6 +49,9 @@ export class TransferUseCase implements UseCase<
     receiverWalletId: string;
     amount: number;
     reference: string;
+    userId?: string;
+    ip?: string;
+    deviceId?: string;
   }) {
     try {
       const existing = await this.transactionRepo.findByReference(
@@ -98,18 +103,7 @@ export class TransferUseCase implements UseCase<
             type: "DEBIT",
             amount: input.amount,
           },
-          // {
-          //   walletId: "SYSTEM_ACCOUNT",
-          //   transactionId: txRecord.id,
-          //   type: "CREDIT" as const,
-          //   amount: input.amount,
-          // },
-          // {
-          //   walletId: "SYSTEM_ACCOUNT",
-          //   transactionId: txRecord.id,
-          //   type: "DEBIT" as const,
-          //   amount: input.amount,
-          // },
+
           {
             walletId: receiverWallet.id,
             transactionId: txRecord.id,
@@ -145,28 +139,30 @@ export class TransferUseCase implements UseCase<
         }
 
         const updatedSender = await this.walletRepo.findById(input.walletId);
-        // tx.wallet.findUnique({
-        //   where: {
-        //     id: senderWallet.id,
-        //   },
-        // });
 
         const updatedReceiver = await this.walletRepo.findById(
           input.receiverWalletId,
         );
-        // const updatedBalances = await this.walletRepo.safeTransfer(
-        //   senderWallet.id,
-        //   receiverWallet.id,
-        //   input.amount,
-        // );
-
-        // const updatedReceiver = await this.walletRepo.updateBalance(
-        //   receiverWallet.id,
-        //   receiverWallet.balance + input.amount,
-        // );
 
         // 4. Mark success
         await this.transactionRepo.updateStatus(txRecord.id, "SUCCESS");
+        await this.auditService.log({
+          userId: input.userId as string,
+
+          action: "TRANSFER_CREATED",
+
+          entityType: "TRANSACTION",
+
+          entityId: tx.id,
+
+          metadata: {
+            amount: input.amount,
+            receiverWalletId: input.receiverWalletId,
+          },
+
+          ip: input.ip as string,
+          deviceId: input.deviceId as string,
+        });
 
         return {
           senderBalance: updatedSender.balance,

@@ -70,3 +70,8 @@ export type Idempotency = Prisma.IdempotencyModel
  * 
  */
 export type UserSession = Prisma.UserSessionModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel

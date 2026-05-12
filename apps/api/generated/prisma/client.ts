@@ -102,3 +102,8 @@ export type UserSession = Prisma.UserSessionModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model Settlement
+ * 
+ */
+export type Settlement = Prisma.SettlementModel

@@ -253,3 +253,25 @@ model AuditLog {
   @@index([entityType])
   @@index([createdAt])
 }
+
+
+model Settlement {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  transactionId   String
+
+  amount          Float
+
+  status          String   @default("PENDING")
+  provider        String?
+
+  reference       String   @unique
+
+  settledAt       DateTime?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status])
+  @@index([transactionId])
+}

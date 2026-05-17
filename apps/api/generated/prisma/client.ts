@@ -107,3 +107,8 @@ export type AuditLog = Prisma.AuditLogModel
  * 
  */
 export type Settlement = Prisma.SettlementModel
+/**
+ * Model LedgerSnapshot
+ * 
+ */
+export type LedgerSnapshot = Prisma.LedgerSnapshotModel

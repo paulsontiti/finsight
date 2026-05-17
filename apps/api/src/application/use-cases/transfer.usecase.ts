@@ -1,10 +1,10 @@
 import type { PrismaClient } from "../../../generated/prisma/client.js";
-import type { WalletRepository } from "../../domain/repositories/wallet.repository.js";
+import type { WalletRepository } from "../../infrastructure/repositories/wallet.repository.js";
 import type {
   ILedgerRepository,
   LedgerEntryProps,
-} from "../../interfaces/ledger-repository.interface.js";
-import type { ITransactionRepository } from "../../interfaces/transaction-repository.interface.js";
+} from "../../domain/interfaces/ledger-repository.interface.js";
+import type { ITransactionRepository } from "../../domain/interfaces/transaction-repository.interface.js";
 import type { AuditService } from "../../services/audit.service.js";
 import type { IdempotencyService } from "../../services/idempotency.service.js";
 import type { UseCase } from "../interfaces/useCase.js";

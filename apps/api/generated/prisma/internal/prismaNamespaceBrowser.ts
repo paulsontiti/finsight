@@ -60,7 +60,8 @@ export const ModelName = {
   Idempotency: 'Idempotency',
   UserSession: 'UserSession',
   AuditLog: 'AuditLog',
-  Settlement: 'Settlement'
+  Settlement: 'Settlement',
+  LedgerSnapshot: 'LedgerSnapshot'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -225,6 +226,18 @@ export const SettlementScalarFieldEnum = {
 } as const
 
 export type SettlementScalarFieldEnum = (typeof SettlementScalarFieldEnum)[keyof typeof SettlementScalarFieldEnum]
+
+
+export const LedgerSnapshotScalarFieldEnum = {
+  id: 'id',
+  walletId: 'walletId',
+  balance: 'balance',
+  ledgerCount: 'ledgerCount',
+  snapshotAt: 'snapshotAt',
+  createdAt: 'createdAt'
+} as const
+
+export type LedgerSnapshotScalarFieldEnum = (typeof LedgerSnapshotScalarFieldEnum)[keyof typeof LedgerSnapshotScalarFieldEnum]
 
 
 export const SortOrder = {

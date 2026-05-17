@@ -120,9 +120,10 @@ model Wallet {
   version   Int      @default(0)
 
   // Relations
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions  Transaction[]
-  ledgerEntries LedgerEntry[]
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions   Transaction[]
+  ledgerEntries  LedgerEntry[]
+  ledgerSnaphots LedgerSnapshot[]
 }
 
 //////////////////////
@@ -254,24 +255,41 @@ model AuditLog {
   @@index([createdAt])
 }
 
-
 model Settlement {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  transactionId   String
+  transactionId String
 
-  amount          Float
+  amount Float
 
-  status          String   @default("PENDING")
-  provider        String?
+  status   String  @default("PENDING")
+  provider String?
 
-  reference       String   @unique
+  reference String @unique
 
-  settledAt       DateTime?
+  settledAt DateTime?
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([status])
   @@index([transactionId])
+}
+
+model LedgerSnapshot {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  walletId String
+
+  balance Float
+
+  ledgerCount Int
+  wallet      Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  snapshotAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([walletId])
+  @@index([snapshotAt])
 }

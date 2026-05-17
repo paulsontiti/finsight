@@ -1,5 +1,6 @@
 import type { Request } from "express";
 import type { Role } from "../../../generated/prisma/enums.js";
+import type { IRepository } from "../../domain/interfaces/irepository.interface.js";
 
 export type EmailVerificaionProp = { userId: string; email: string };
 
@@ -32,7 +33,7 @@ export interface IGenerator {
   generate(): string;
 }
 
-export interface IUserRepository extends Repository<
+export interface IUserRepository extends IRepository<
   CreateUserProps,
   DBUserProps
 > {
@@ -85,7 +86,7 @@ export interface CreateApiKeyProps {
   ownerId: string;
 }
 
-export interface IApiKeyRepository extends Repository<
+export interface IApiKeyRepository extends IRepository<
   CreateApiKeyProps,
   DBUserProps
 > {
@@ -96,10 +97,7 @@ export interface IHashService {
   compare(password: string, hash: string): Promise<boolean>;
 }
 
-export interface Repository<Input, Output> {
-  create(entity: Input): Promise<Output>;
-  findById(id: string): Promise<Output | null>;
-}
+
 export interface IRefreshTokenRepository {
   create(data: CreateRefreshTokenProps): Promise<void>;
 

@@ -1,8 +1,8 @@
 import { Worker } from "bullmq";
-import { redis } from "../queue/redis.js";
-import { deadLetterQueue } from "../queue/queues.js";
-import { PaymentUseCase } from "../../application/use-cases/payment.usecase.js";
-import { container } from "../../shared/container/index.js";
+import { redis } from "../api/src/infrastructure/queue/redis.js";
+import { deadLetterQueue } from "../api/src/infrastructure/queue/queues.js";
+import { PaymentUseCase } from "../api/src/application/use-cases/payment.usecase.js";
+import { container } from "../api/src/shared/container/index.js";
 
 const paymentUseCase = container.resolve<PaymentUseCase>("paymentUseCase");
 

@@ -1,4 +1,4 @@
-import type { PrismaPasswordResetTokenRepository } from "../../domain/repositories/prisma-password-reset.repository.js";
+import type { PrismaPasswordResetTokenRepository } from "../../infrastructure/repositories/prisma-password-reset.repository.js";
 import {
   InvalidCredentialsError,
   UserNotFoundError,
@@ -31,9 +31,8 @@ export class ResetPasswordUseCase implements UseCase<
     if (!record) {
       throw new InvalidCredentialsError("Invalid token");
     }
-    
-    if (record.expiresAt < new Date()) {
 
+    if (record.expiresAt < new Date()) {
       throw new InvalidCredentialsError("Token expired");
     }
 

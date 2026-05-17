@@ -2,7 +2,7 @@ import {
   CreateUserEntity,
   DBUserEntity,
 } from "../../domain/entities/user.entity.js";
-import type { PrismaUserRepository } from "../../domain/repositories/user.repository.js";
+import type { PrismaUserRepository } from "../../infrastructure/repositories/user.repository.js";
 import { AppError } from "../../shared/erors/base.error.js";
 import {
   BcryptHashError,

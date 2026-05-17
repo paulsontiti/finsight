@@ -9,14 +9,14 @@ import { RegisterUserUseCase } from "../../application/use-cases/register-user.u
 import { ResetPasswordUseCase } from "../../application/use-cases/reset-password.usecase.js";
 import { SendResetPasswordUseCase } from "../../application/use-cases/send-reset-password.usecase.js";
 import { VerifyEmailUseCase } from "../../application/use-cases/verify-email.usecase.js";
-import { PrismaIdempotencyRepository } from "../../domain/repositories/idempotency.repository.js";
-import { PrismaLedgerRepository } from "../../domain/repositories/prisma-ledger.repository.js";
-import { PrismaPasswordResetTokenRepository } from "../../domain/repositories/prisma-password-reset.repository.js";
-import { PrismaTransactionRepository } from "../../domain/repositories/prisma-transaction.repository.js";
-import { PrismaRefreshTokenRepository } from "../../domain/repositories/refresh-token.repository.js";
-import { PrismaUserRepository } from "../../domain/repositories/user.repository.js";
-import { PrismaVerificationTokenRepository } from "../../domain/repositories/verification-token.repository.js";
-import { WalletRepository } from "../../domain/repositories/wallet.repository.js";
+import { PrismaIdempotencyRepository } from "../../infrastructure/repositories/idempotency.repository.js";
+import { PrismaLedgerRepository } from "../../infrastructure/repositories/prisma-ledger.repository.js";
+import { PrismaPasswordResetTokenRepository } from "../../infrastructure/repositories/prisma-password-reset.repository.js";
+import { PrismaTransactionRepository } from "../../infrastructure/repositories/prisma-transaction.repository.js";
+import { PrismaRefreshTokenRepository } from "../../infrastructure/repositories/refresh-token.repository.js";
+import { PrismaUserRepository } from "../../infrastructure/repositories/user.repository.js";
+import { PrismaVerificationTokenRepository } from "../../infrastructure/repositories/verification-token.repository.js";
+import { WalletRepository } from "../../infrastructure/repositories/wallet.repository.js";
 import prisma from "../../prisma.js";
 import { IdempotencyService } from "../../services/idempotency.service.js";
 import { MockMailer } from "../../services/mock-mailer.service.js";
@@ -92,7 +92,7 @@ container.register("tokenGeneratorService", () => {
   return new TokenGeneratorService();
 });
 container.register("idempotencyService", () => {
-    const idempotencyRepository = container.resolve<PrismaIdempotencyRepository>(
+  const idempotencyRepository = container.resolve<PrismaIdempotencyRepository>(
     "idempotencyRepository",
   );
   return new IdempotencyService(idempotencyRepository);
@@ -214,13 +214,15 @@ container.register("paymentUseCase", (c) => {
   const transRepo = c.resolve<PrismaTransactionRepository>(
     "transactionRepository",
   );
-   const ledgerRepo = c.resolve<PrismaLedgerRepository>(
-    "ledgerRepository",
+  const ledgerRepo = c.resolve<PrismaLedgerRepository>("ledgerRepository");
+  const idemService = c.resolve<IdempotencyService>("idempotencyService");
+  return new PaymentUseCase(
+    walletRepo,
+    transRepo,
+    ledgerRepo,
+    idemService,
+    prisma,
   );
-    const idemService = c.resolve<IdempotencyService>(
-    "idempotencyService",
-  );
-  return new PaymentUseCase(walletRepo,transRepo,ledgerRepo,idemService,prisma);
 });
 
 // container.register("fundWalletUseCase", (c) => {

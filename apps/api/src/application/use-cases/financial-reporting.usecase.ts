@@ -1,4 +1,4 @@
-import type { PrismaTransactionRepository } from "../../domain/repositories/prisma-transaction.repository.js";
+import type { PrismaTransactionRepository } from "../../infrastructure/repositories/prisma-transaction.repository.js";
 
 export class FinancialReportingUseCase {
   constructor(

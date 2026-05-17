@@ -1,4 +1,4 @@
-import type { PrismaAuditRepository } from "../domain/repositories/audit.repository.js";
+import type { PrismaAuditRepository } from "../infrastructure/repositories/audit.repository.js";
 import type { AuditLogger } from "../shared/logger/audit.logger.js";
 
 export class AuditService {

@@ -1,4 +1,4 @@
-import type { IIdempotencyRepository } from "../interfaces/idempotency-repository.interface.js";
+import type { IIdempotencyRepository } from "../domain/interfaces/idempotency-repository.interface.js";
 import { hashRequest } from "./hash-request.service.js";
 
 export class IdempotencyService {

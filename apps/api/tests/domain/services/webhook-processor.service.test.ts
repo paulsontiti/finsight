@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import {WebhookProcessor} from "../../src/services/webhook-processor.service"
+import {WebhookProcessor} from "../../../src/services/webhook-processor.service"
 
 let webhookRepo: any;
 let paymentUseCase: any;

@@ -401,7 +401,8 @@ export const ModelName = {
   Idempotency: 'Idempotency',
   UserSession: 'UserSession',
   AuditLog: 'AuditLog',
-  Settlement: 'Settlement'
+  Settlement: 'Settlement',
+  LedgerSnapshot: 'LedgerSnapshot'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -417,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordResetToken" | "verificationToken" | "refreshToken" | "wallet" | "transaction" | "ledgerEntry" | "savingsPlan" | "idempotency" | "userSession" | "auditLog" | "settlement"
+    modelProps: "user" | "passwordResetToken" | "verificationToken" | "refreshToken" | "wallet" | "transaction" | "ledgerEntry" | "savingsPlan" | "idempotency" | "userSession" | "auditLog" | "settlement" | "ledgerSnapshot"
     txIsolationLevel: never
   }
   model: {
@@ -1309,6 +1310,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LedgerSnapshot: {
+      payload: Prisma.$LedgerSnapshotPayload<ExtArgs>
+      fields: Prisma.LedgerSnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LedgerSnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LedgerSnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LedgerSnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LedgerSnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.LedgerSnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LedgerSnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LedgerSnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LedgerSnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.LedgerSnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LedgerSnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.LedgerSnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LedgerSnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.LedgerSnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.LedgerSnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LedgerSnapshotPayload>
+        }
+        update: {
+          args: Prisma.LedgerSnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LedgerSnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.LedgerSnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LedgerSnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.LedgerSnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LedgerSnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.LedgerSnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLedgerSnapshot>
+        }
+        groupBy: {
+          args: Prisma.LedgerSnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LedgerSnapshotGroupByOutputType>[]
+        }
+        findRaw: {
+          args: Prisma.LedgerSnapshotFindRawArgs<ExtArgs>
+          result: Prisma.JsonObject
+        }
+        aggregateRaw: {
+          args: Prisma.LedgerSnapshotAggregateRawArgs<ExtArgs>
+          result: Prisma.JsonObject
+        }
+        count: {
+          args: Prisma.LedgerSnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LedgerSnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1482,6 +1557,18 @@ export const SettlementScalarFieldEnum = {
 } as const
 
 export type SettlementScalarFieldEnum = (typeof SettlementScalarFieldEnum)[keyof typeof SettlementScalarFieldEnum]
+
+
+export const LedgerSnapshotScalarFieldEnum = {
+  id: 'id',
+  walletId: 'walletId',
+  balance: 'balance',
+  ledgerCount: 'ledgerCount',
+  snapshotAt: 'snapshotAt',
+  createdAt: 'createdAt'
+} as const
+
+export type LedgerSnapshotScalarFieldEnum = (typeof LedgerSnapshotScalarFieldEnum)[keyof typeof LedgerSnapshotScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1743,6 +1830,7 @@ export type GlobalOmitConfig = {
   userSession?: Prisma.UserSessionOmit
   auditLog?: Prisma.AuditLogOmit
   settlement?: Prisma.SettlementOmit
+  ledgerSnapshot?: Prisma.LedgerSnapshotOmit
 }
 
 /* Types for Logging */

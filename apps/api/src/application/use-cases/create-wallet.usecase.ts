@@ -1,5 +1,5 @@
 import { CreateWallet, Wallet } from "../../domain/entities/wallet.entity.js";
-import type { IWalletRepository } from "../../interfaces/wallet-repository.interface.js";
+import type { IWalletRepository } from "../../domain/interfaces/wallet-repository.interface.js";
 import {
   InvalidCredentialsError,
   UserAlreadyHasWalletError,
@@ -7,15 +7,15 @@ import {
 import { DatabaseError } from "../../shared/erors/system.error.js";
 import type { UseCase } from "../interfaces/useCase.js";
 
-export class CreateWalletUseCase implements UseCase<CreateWallet,Wallet>{
+export class CreateWalletUseCase implements UseCase<CreateWallet, Wallet> {
   constructor(private readonly walletRepo: IWalletRepository) {}
 
-  async execute(input: { userId: string; currency: string }) {
+  async execute(input: CreateWallet) {
     try {
       const existingWallet = await this.walletRepo.findByUserId(input.userId);
 
       if (existingWallet) {
-        throw new UserAlreadyHasWalletError()
+        throw new UserAlreadyHasWalletError();
         //Error("User already has a wallet");
       }
 
@@ -43,11 +43,11 @@ export class CreateWalletUseCase implements UseCase<CreateWallet,Wallet>{
       if (err instanceof InvalidCredentialsError) {
         throw new InvalidCredentialsError(err.message);
       }
-        if (err instanceof DatabaseError) {
+      if (err instanceof DatabaseError) {
         throw new DatabaseError(err.message);
       }
 
-      console.log(err)
+      console.log(err);
       throw new Error(err.message);
     }
     // return {

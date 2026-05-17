@@ -9,4 +9,5 @@ export interface ILedgerRepository {
   createMany(entries: LedgerEntryProps[]): Promise<void>;
 
   findByWalletId(walletId: string): Promise<any[]>;
+  findAfterDate(walletId: string,snapshotAt:Date): Promise<any[]>;
 }

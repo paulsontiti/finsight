@@ -1,31 +1,32 @@
-import type { PrismaLedgerRepository } from "../domain/repositories/prisma-ledger.repository.js";
-import type { PrismaTransactionRepository } from "../domain/repositories/prisma-transaction.repository.js";
-import type { WalletRepository } from "../domain/repositories/wallet.repository.js";
+import type { PrismaLedgerRepository } from "../infrastructure/repositories/prisma-ledger.repository.js";
+import type { PrismaTransactionRepository } from "../infrastructure/repositories/prisma-transaction.repository.js";
+import type { WalletRepository } from "../infrastructure/repositories/wallet.repository.js";
 
 export class ReconciliationService {
   constructor(
     private ledgerRepo: PrismaLedgerRepository,
     private transactionRepo: PrismaTransactionRepository,
-    private walletRepo: WalletRepository
+    private walletRepo: WalletRepository,
   ) {}
 
   // 🔍 MAIN RECONCILIATION
   async reconcile(startDate: string, endDate: string) {
-    const ledgerEntries =
-      await this.ledgerRepo.getEntriesByDateRange(startDate, endDate);
+    const ledgerEntries = await this.ledgerRepo.getEntriesByDateRange(
+      startDate,
+      endDate,
+    );
 
-    const transactions =
-      await this.transactionRepo.getByDateRange(startDate, endDate);
+    const transactions = await this.transactionRepo.getByDateRange(
+      startDate,
+      endDate,
+    );
 
     const mismatches: any[] = [];
 
     const ledgerMap = this.groupByWallet(ledgerEntries);
     const txMap = this.groupByWallet(transactions);
 
-    const wallets = new Set([
-      ...Object.keys(ledgerMap),
-      ...Object.keys(txMap)
-    ]);
+    const wallets = new Set([...Object.keys(ledgerMap), ...Object.keys(txMap)]);
 
     for (const walletId of wallets) {
       const ledgerTotal = this.sum(ledgerMap[walletId]);
@@ -36,7 +37,7 @@ export class ReconciliationService {
         mismatches.push({
           walletId,
           type: "MISSING_TRANSACTION",
-          ledgerTotal
+          ledgerTotal,
         });
         continue;
       }
@@ -46,7 +47,7 @@ export class ReconciliationService {
         mismatches.push({
           walletId,
           type: "MISSING_LEDGER_ENTRY",
-          txTotal
+          txTotal,
         });
         continue;
       }
@@ -57,7 +58,7 @@ export class ReconciliationService {
           walletId,
           type: "AMOUNT_MISMATCH",
           ledgerTotal,
-          txTotal
+          txTotal,
         });
       }
     }
@@ -71,8 +72,8 @@ export class ReconciliationService {
         generatedAt: new Date(),
         totalWallets: wallets.size,
         mismatchCount: mismatches.length,
-        status
-      }
+        status,
+      },
     };
   }
 
@@ -82,14 +83,13 @@ export class ReconciliationService {
     const mismatches: any[] = [];
 
     for (const wallet of wallets) {
-      const ledgerEntries =
-        await this.ledgerRepo.getEntriesByDateRange(
-          "start",
-          "end"
-        );
+      const ledgerEntries = await this.ledgerRepo.getEntriesByDateRange(
+        "start",
+        "end",
+      );
 
       const walletLedger = ledgerEntries.filter(
-        (e: any) => e.walletId === wallet.id
+        (e: any) => e.walletId === wallet.id,
       );
 
       const ledgerBalance = this.sum(walletLedger);
@@ -100,21 +100,21 @@ export class ReconciliationService {
           walletId: wallet.id,
           type: "BALANCE_DRIFT",
           ledgerBalance,
-          systemBalance
+          systemBalance,
         });
       }
     }
 
     return {
       valid: mismatches.length === 0,
-      errors: mismatches
+      errors: mismatches,
     };
   }
 
   // 🧠 HELPERS
 
   private groupByWallet(items: any[]) {
-    if(!Array.isArray(items)) return {};
+    if (!Array.isArray(items)) return {};
     return items.reduce((acc, item) => {
       if (!acc[item.walletId]) acc[item.walletId] = [];
       acc[item.walletId].push(item);

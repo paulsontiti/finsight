@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
-import type { SendResetPasswordUseCase } from "../application/use-cases/send-reset-password.usecase.js";
+import type { UseCase } from "../application/interfaces/useCase.js";
 
 export class ForgotPasswordController {
-  constructor(private readonly useCase: SendResetPasswordUseCase) {}
+  constructor(private readonly useCase: UseCase<string,{success:boolean}>) {}
 
   handle = async(req: Request, res: Response, next: NextFunction) =>{
     try {

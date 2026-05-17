@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import type { ITransactionRepository } from "../../interfaces/transaction-repository.interface.js";
+import type { ITransactionRepository } from "../../domain/interfaces/transaction-repository.interface.js";
 
 export class PrismaTransactionRepository implements ITransactionRepository {
   constructor(private prisma: PrismaClient) {}
 
-   // 🔍 FIND PENDING TRANSACTIONS
+  // 🔍 FIND PENDING TRANSACTIONS
   async findPending() {
     return this.prisma.transaction.findMany({
       where: {
@@ -16,7 +16,6 @@ export class PrismaTransactionRepository implements ITransactionRepository {
       },
     });
   }
-
 
   async findAll() {
     return this.prisma.transaction.findMany();

@@ -42,7 +42,7 @@ export interface IUserRepository extends IRepository<
 }
 
 export interface AuthRequest extends Request {
-  user?: { userId?: string };
+  user?: { userId?: string,role?:string };
   apiClient: any;
 }
 

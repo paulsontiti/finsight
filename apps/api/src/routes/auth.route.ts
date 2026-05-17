@@ -8,6 +8,8 @@ import type { ResetPasswordUseCase } from "../application/use-cases/reset-passwo
 import { ForgotPasswordController } from "../controllers/forgot-password.js";
 import type { SendResetPasswordUseCase } from "../application/use-cases/send-reset-password.usecase.js";
 import type { ValidationsService } from "../services/validations-service.js";
+import { authLimiter } from "../domain/middlewares/auth-rate-limit.js";
+import { authorizeMiddleware } from "../domain/middlewares/authorize.middleware.js";
 
 const authRouter = Router();
 
@@ -24,7 +26,7 @@ const resetPasswordUserUseCase = container.resolve<ResetPasswordUseCase>(
 );
 
 const resetPasswordController = new ResetPasswordController(
-  resetPasswordUserUseCase
+  resetPasswordUserUseCase,
 );
 const sendResetPasswordUserUseCase =
   container.resolve<SendResetPasswordUseCase>("sendResetPasswordUserUseCase");
@@ -33,10 +35,22 @@ const forgotPasswordController = new ForgotPasswordController(
 );
 
 authRouter.post("/register", userController.register);
-authRouter.post("/login", userController.login);
-authRouter.post("/refresh-token", userController.refreshToken);
-authRouter.get("/verify", verifyEmailController.handle);
-authRouter.post("/reset-password", resetPasswordController.handle);
+authRouter.post("/login", authLimiter, userController.login);
+authRouter.post(
+  "/refresh-token",
+  authorizeMiddleware("APPUSER"),
+  userController.refreshToken,
+);
+authRouter.get(
+  "/verify",
+  authorizeMiddleware("APPUSER"),
+  verifyEmailController.handle,
+);
+authRouter.post(
+  "/reset-password",
+  authorizeMiddleware("APPUSER"),
+  resetPasswordController.handle,
+);
 authRouter.post("/forgot-password", forgotPasswordController.handle);
 
 export default authRouter;

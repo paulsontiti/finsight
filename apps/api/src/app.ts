@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { AppError } from "./shared/erors/base.error.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route.js";
+import { apiRateLimiter } from "./domain/middlewares/rate-limit.middleware.js";
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
+app.use("/api", apiRateLimiter);
 
 app.use(cookieParser());
 

@@ -1,8 +1,10 @@
-import type {  Response, NextFunction } from "express";
-import type { AuthRequest, ITokenService, UserPayload } from "../shared/types/index.js";
-import { InvalidCredentialsError } from "../shared/erors/domain.errors.js";
-
-
+import type { Response, NextFunction } from "express";
+import type {
+  AuthRequest,
+  ITokenService,
+  UserPayload,
+} from "../../shared/types/index.js";
+import { InvalidCredentialsError } from "../../shared/erors/domain.errors.js";
 
 export function authMiddleware(tokenService: ITokenService) {
   return (req: AuthRequest, res: Response, next: NextFunction) => {

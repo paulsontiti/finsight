@@ -8,6 +8,9 @@ export class WebhookController {
 
   async handle(req: any, res: any) {
     try {
+      if (Date.now() - req.body.timestamp > 5 * 60 * 1000) {
+        throw new Error("Expired webhook");
+      }
       const config = container.resolve<any>("configService");
       const paystackSecret = config.get("PAYSTACK_SECRET");
       const signature = req.headers["x-paystack-signature"];
@@ -24,7 +27,7 @@ export class WebhookController {
 
       const event = req.body;
 
-        //Enqeue Job
+      //Enqeue Job
       await this.webhookQueue.add(
         "process-webhook",
 

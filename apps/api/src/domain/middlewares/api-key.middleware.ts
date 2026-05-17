@@ -1,8 +1,12 @@
-import type {  Response, NextFunction } from "express";
-import type { IApiKeyRepository, AuthRequest } from "../shared/types/index.js";
-import { InvalidCredentialsError, UnauthorizedError } from "../shared/erors/domain.errors.js";
-
-
+import type { Response, NextFunction } from "express";
+import type {
+  IApiKeyRepository,
+  AuthRequest,
+} from "../../shared/types/index.js";
+import {
+  InvalidCredentialsError,
+  UnauthorizedError,
+} from "../../shared/erors/domain.errors.js";
 
 export function apiKeyMiddleware(repo: IApiKeyRepository) {
   return async (req: AuthRequest, res: Response, next: NextFunction) => {

@@ -10,6 +10,7 @@ export const processWebhookJob = async (
   job: any,
   paymentUseCase: PaymentUseCase,
 ) => {
+ 
   const event = job.data?.event;
 
   if (!event) {

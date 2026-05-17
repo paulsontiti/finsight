@@ -4,7 +4,7 @@ import type { ITransactionRepository } from "../../domain/interfaces/transaction
 import type { IWalletRepository } from "../../domain/interfaces/wallet-repository.interface.js";
 import type { IdempotencyService } from "../../services/idempotency.service.js";
 import type { TransactionLogger } from "../../shared/logger/transaction.logger.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
 type FundWalletType = {
   userId: string;

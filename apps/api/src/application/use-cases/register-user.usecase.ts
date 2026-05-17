@@ -15,7 +15,7 @@ import type {
   IHashService,
   RegisterLoginUserDTO,
 } from "../../shared/types/index.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
 export class RegisterUserUseCase implements UseCase<any, any> {
   constructor(

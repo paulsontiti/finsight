@@ -9,6 +9,7 @@ export interface WalletProps {
   status: WalletStatus;
   createdAt: Date;
   updatedAt: Date;
+  version:number
 }
 
 export interface CreateWalletProps {
@@ -33,7 +34,8 @@ export class Wallet extends Entity{
       status: "ACTIVE",
       createdAt: new Date(),
       updatedAt: new Date(),
-      balance: props.balance
+      balance: props.balance,
+      version: props.version
     });
   }
 

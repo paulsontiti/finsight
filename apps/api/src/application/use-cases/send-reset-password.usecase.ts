@@ -1,9 +1,17 @@
 import { UserNotFoundError } from "../../shared/erors/domain.errors.js";
-import type { IGenerator, IHashService, IMailer, ITokenRepository, IUserRepository } from "../../shared/types/index.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type {
+  IGenerator,
+  IHashService,
+  IMailer,
+  ITokenRepository,
+  IUserRepository,
+} from "../../shared/types/index.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
-
-export class SendResetPasswordUseCase implements UseCase<string,{success:boolean}>{
+export class SendResetPasswordUseCase implements UseCase<
+  string,
+  { success: boolean }
+> {
   constructor(
     private readonly tokenRepo: ITokenRepository,
     private readonly userRepo: IUserRepository,
@@ -27,13 +35,13 @@ export class SendResetPasswordUseCase implements UseCase<string,{success:boolean
     await this.tokenRepo.create({
       userId: user.id,
       token,
-      expiresAt
+      expiresAt,
     });
 
     await this.mailer.send({
       to: email,
       subject: "Reset your password",
-      body: `Reset link: http://localhost:3000/reset-password?token=${token}`
+      body: `Reset link: http://localhost:3000/reset-password?token=${token}`,
     });
 
     return { success: true };

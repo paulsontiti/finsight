@@ -4,7 +4,7 @@ import {
   UnauthorizedError,
 } from "../../shared/erors/domain.errors.js";
 import type { ITokenService } from "../../shared/types/index.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
 export class RefreshTokenUseCase implements UseCase<string, string> {
   constructor(

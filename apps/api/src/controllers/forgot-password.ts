@@ -1,26 +1,28 @@
 import type { Request, Response, NextFunction } from "express";
-import type { UseCase } from "../application/interfaces/useCase.js";
+import type { UseCase } from "../domain/interfaces/useCase.js";
 
 export class ForgotPasswordController {
-  constructor(private readonly useCase: UseCase<string,{success:boolean}>) {}
+  constructor(
+    private readonly useCase: UseCase<string, { success: boolean }>,
+  ) {}
 
-  handle = async(req: Request, res: Response, next: NextFunction) =>{
+  handle = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email } = req.body;
 
       if (!email || typeof email !== "string") {
         return res.status(400).json({
-          message: "Email is required"
+          message: "Email is required",
         });
       }
 
-        await this.useCase.execute(email.trim().toLowerCase());
+      await this.useCase.execute(email.trim().toLowerCase());
 
       return res.status(200).json({
-        message: "Password reset email sent"
+        message: "Password reset email sent",
       });
-    } catch (error:any) {
+    } catch (error: any) {
       next(error);
     }
-  }
+  };
 }

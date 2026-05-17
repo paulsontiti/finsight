@@ -39,6 +39,7 @@ export type LedgerEntryMinAggregateOutputType = {
   walletId: string | null
   transactionId: string | null
   amount: number | null
+  currency: string | null
   type: $Enums.LedgerEntryType | null
   createdAt: Date | null
 }
@@ -48,6 +49,7 @@ export type LedgerEntryMaxAggregateOutputType = {
   walletId: string | null
   transactionId: string | null
   amount: number | null
+  currency: string | null
   type: $Enums.LedgerEntryType | null
   createdAt: Date | null
 }
@@ -57,6 +59,7 @@ export type LedgerEntryCountAggregateOutputType = {
   walletId: number
   transactionId: number
   amount: number
+  currency: number
   type: number
   createdAt: number
   _all: number
@@ -76,6 +79,7 @@ export type LedgerEntryMinAggregateInputType = {
   walletId?: true
   transactionId?: true
   amount?: true
+  currency?: true
   type?: true
   createdAt?: true
 }
@@ -85,6 +89,7 @@ export type LedgerEntryMaxAggregateInputType = {
   walletId?: true
   transactionId?: true
   amount?: true
+  currency?: true
   type?: true
   createdAt?: true
 }
@@ -94,6 +99,7 @@ export type LedgerEntryCountAggregateInputType = {
   walletId?: true
   transactionId?: true
   amount?: true
+  currency?: true
   type?: true
   createdAt?: true
   _all?: true
@@ -190,6 +196,7 @@ export type LedgerEntryGroupByOutputType = {
   walletId: string
   transactionId: string
   amount: number
+  currency: string
   type: $Enums.LedgerEntryType
   createdAt: Date
   _count: LedgerEntryCountAggregateOutputType | null
@@ -222,6 +229,7 @@ export type LedgerEntryWhereInput = {
   walletId?: Prisma.StringFilter<"LedgerEntry"> | string
   transactionId?: Prisma.StringFilter<"LedgerEntry"> | string
   amount?: Prisma.IntFilter<"LedgerEntry"> | number
+  currency?: Prisma.StringFilter<"LedgerEntry"> | string
   type?: Prisma.EnumLedgerEntryTypeFilter<"LedgerEntry"> | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFilter<"LedgerEntry"> | Date | string
   wallet?: Prisma.XOR<Prisma.WalletScalarRelationFilter, Prisma.WalletWhereInput>
@@ -233,6 +241,7 @@ export type LedgerEntryOrderByWithRelationInput = {
   walletId?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   wallet?: Prisma.WalletOrderByWithRelationInput
@@ -247,6 +256,7 @@ export type LedgerEntryWhereUniqueInput = Prisma.AtLeast<{
   walletId?: Prisma.StringFilter<"LedgerEntry"> | string
   transactionId?: Prisma.StringFilter<"LedgerEntry"> | string
   amount?: Prisma.IntFilter<"LedgerEntry"> | number
+  currency?: Prisma.StringFilter<"LedgerEntry"> | string
   type?: Prisma.EnumLedgerEntryTypeFilter<"LedgerEntry"> | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFilter<"LedgerEntry"> | Date | string
   wallet?: Prisma.XOR<Prisma.WalletScalarRelationFilter, Prisma.WalletWhereInput>
@@ -258,6 +268,7 @@ export type LedgerEntryOrderByWithAggregationInput = {
   walletId?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.LedgerEntryCountOrderByAggregateInput
@@ -275,6 +286,7 @@ export type LedgerEntryScalarWhereWithAggregatesInput = {
   walletId?: Prisma.StringWithAggregatesFilter<"LedgerEntry"> | string
   transactionId?: Prisma.StringWithAggregatesFilter<"LedgerEntry"> | string
   amount?: Prisma.IntWithAggregatesFilter<"LedgerEntry"> | number
+  currency?: Prisma.StringWithAggregatesFilter<"LedgerEntry"> | string
   type?: Prisma.EnumLedgerEntryTypeWithAggregatesFilter<"LedgerEntry"> | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LedgerEntry"> | Date | string
 }
@@ -282,6 +294,7 @@ export type LedgerEntryScalarWhereWithAggregatesInput = {
 export type LedgerEntryCreateInput = {
   id?: string
   amount: number
+  currency?: string
   type: $Enums.LedgerEntryType
   createdAt?: Date | string
   wallet: Prisma.WalletCreateNestedOneWithoutLedgerEntriesInput
@@ -293,12 +306,14 @@ export type LedgerEntryUncheckedCreateInput = {
   walletId: string
   transactionId: string
   amount: number
+  currency?: string
   type: $Enums.LedgerEntryType
   createdAt?: Date | string
 }
 
 export type LedgerEntryUpdateInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.WalletUpdateOneRequiredWithoutLedgerEntriesNestedInput
@@ -309,6 +324,7 @@ export type LedgerEntryUncheckedUpdateInput = {
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -318,12 +334,14 @@ export type LedgerEntryCreateManyInput = {
   walletId: string
   transactionId: string
   amount: number
+  currency?: string
   type: $Enums.LedgerEntryType
   createdAt?: Date | string
 }
 
 export type LedgerEntryUpdateManyMutationInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -332,6 +350,7 @@ export type LedgerEntryUncheckedUpdateManyInput = {
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -351,6 +370,7 @@ export type LedgerEntryCountOrderByAggregateInput = {
   walletId?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -364,6 +384,7 @@ export type LedgerEntryMaxOrderByAggregateInput = {
   walletId?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -373,6 +394,7 @@ export type LedgerEntryMinOrderByAggregateInput = {
   walletId?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -472,6 +494,7 @@ export type EnumLedgerEntryTypeFieldUpdateOperationsInput = {
 export type LedgerEntryCreateWithoutWalletInput = {
   id?: string
   amount: number
+  currency?: string
   type: $Enums.LedgerEntryType
   createdAt?: Date | string
   transaction: Prisma.TransactionCreateNestedOneWithoutLedgerEntriesInput
@@ -481,6 +504,7 @@ export type LedgerEntryUncheckedCreateWithoutWalletInput = {
   id?: string
   transactionId: string
   amount: number
+  currency?: string
   type: $Enums.LedgerEntryType
   createdAt?: Date | string
 }
@@ -518,6 +542,7 @@ export type LedgerEntryScalarWhereInput = {
   walletId?: Prisma.StringFilter<"LedgerEntry"> | string
   transactionId?: Prisma.StringFilter<"LedgerEntry"> | string
   amount?: Prisma.IntFilter<"LedgerEntry"> | number
+  currency?: Prisma.StringFilter<"LedgerEntry"> | string
   type?: Prisma.EnumLedgerEntryTypeFilter<"LedgerEntry"> | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFilter<"LedgerEntry"> | Date | string
 }
@@ -525,6 +550,7 @@ export type LedgerEntryScalarWhereInput = {
 export type LedgerEntryCreateWithoutTransactionInput = {
   id?: string
   amount: number
+  currency?: string
   type: $Enums.LedgerEntryType
   createdAt?: Date | string
   wallet: Prisma.WalletCreateNestedOneWithoutLedgerEntriesInput
@@ -534,6 +560,7 @@ export type LedgerEntryUncheckedCreateWithoutTransactionInput = {
   id?: string
   walletId: string
   amount: number
+  currency?: string
   type: $Enums.LedgerEntryType
   createdAt?: Date | string
 }
@@ -567,12 +594,14 @@ export type LedgerEntryCreateManyWalletInput = {
   id?: string
   transactionId: string
   amount: number
+  currency?: string
   type: $Enums.LedgerEntryType
   createdAt?: Date | string
 }
 
 export type LedgerEntryUpdateWithoutWalletInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutLedgerEntriesNestedInput
@@ -581,6 +610,7 @@ export type LedgerEntryUpdateWithoutWalletInput = {
 export type LedgerEntryUncheckedUpdateWithoutWalletInput = {
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -588,6 +618,7 @@ export type LedgerEntryUncheckedUpdateWithoutWalletInput = {
 export type LedgerEntryUncheckedUpdateManyWithoutWalletInput = {
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -596,12 +627,14 @@ export type LedgerEntryCreateManyTransactionInput = {
   id?: string
   walletId: string
   amount: number
+  currency?: string
   type: $Enums.LedgerEntryType
   createdAt?: Date | string
 }
 
 export type LedgerEntryUpdateWithoutTransactionInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   wallet?: Prisma.WalletUpdateOneRequiredWithoutLedgerEntriesNestedInput
@@ -610,6 +643,7 @@ export type LedgerEntryUpdateWithoutTransactionInput = {
 export type LedgerEntryUncheckedUpdateWithoutTransactionInput = {
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -617,6 +651,7 @@ export type LedgerEntryUncheckedUpdateWithoutTransactionInput = {
 export type LedgerEntryUncheckedUpdateManyWithoutTransactionInput = {
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -628,6 +663,7 @@ export type LedgerEntrySelect<ExtArgs extends runtime.Types.Extensions.InternalA
   walletId?: boolean
   transactionId?: boolean
   amount?: boolean
+  currency?: boolean
   type?: boolean
   createdAt?: boolean
   wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
@@ -641,11 +677,12 @@ export type LedgerEntrySelectScalar = {
   walletId?: boolean
   transactionId?: boolean
   amount?: boolean
+  currency?: boolean
   type?: boolean
   createdAt?: boolean
 }
 
-export type LedgerEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "walletId" | "transactionId" | "amount" | "type" | "createdAt", ExtArgs["result"]["ledgerEntry"]>
+export type LedgerEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "walletId" | "transactionId" | "amount" | "currency" | "type" | "createdAt", ExtArgs["result"]["ledgerEntry"]>
 export type LedgerEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
   transaction?: boolean | Prisma.TransactionDefaultArgs<ExtArgs>
@@ -662,6 +699,7 @@ export type $LedgerEntryPayload<ExtArgs extends runtime.Types.Extensions.Interna
     walletId: string
     transactionId: string
     amount: number
+    currency: string
     type: $Enums.LedgerEntryType
     createdAt: Date
   }, ExtArgs["result"]["ledgerEntry"]>
@@ -1062,6 +1100,7 @@ export interface LedgerEntryFieldRefs {
   readonly walletId: Prisma.FieldRef<"LedgerEntry", 'String'>
   readonly transactionId: Prisma.FieldRef<"LedgerEntry", 'String'>
   readonly amount: Prisma.FieldRef<"LedgerEntry", 'Int'>
+  readonly currency: Prisma.FieldRef<"LedgerEntry", 'String'>
   readonly type: Prisma.FieldRef<"LedgerEntry", 'LedgerEntryType'>
   readonly createdAt: Prisma.FieldRef<"LedgerEntry", 'DateTime'>
 }

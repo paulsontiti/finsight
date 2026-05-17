@@ -1,6 +1,6 @@
 import type { PrismaTransactionRepository } from "../../infrastructure/repositories/prisma-transaction.repository.js";
 import type { WalletRepository } from "../../infrastructure/repositories/wallet.repository.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
 export interface FraudCheckInput {
   userId: string;

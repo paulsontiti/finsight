@@ -7,7 +7,7 @@ import type {
   ITokenRepository,
   IUserRepository,
 } from "../../shared/types/index.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
 export class VerifyEmailUseCase implements UseCase<
   string,
@@ -26,7 +26,6 @@ export class VerifyEmailUseCase implements UseCase<
 
       const record = await this.tokenRepo.find(token);
 
-     
       if (!record) {
         throw new InvalidCredentialsError("Invalid token");
       }
@@ -63,6 +62,5 @@ export class VerifyEmailUseCase implements UseCase<
 
       throw new DatabaseError();
     }
-    
   }
 }

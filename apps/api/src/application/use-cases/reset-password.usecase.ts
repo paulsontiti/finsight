@@ -9,7 +9,7 @@ import type {
   ITokenRepository,
   IUserRepository,
 } from "../../shared/types/index.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
 export class ResetPasswordUseCase implements UseCase<
   { token: string; newPassword: string },

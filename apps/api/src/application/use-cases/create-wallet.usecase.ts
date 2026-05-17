@@ -5,7 +5,7 @@ import {
   UserAlreadyHasWalletError,
 } from "../../shared/erors/domain.errors.js";
 import { DatabaseError } from "../../shared/erors/system.error.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
 export class CreateWalletUseCase implements UseCase<CreateWallet, Wallet> {
   constructor(private readonly walletRepo: IWalletRepository) {}

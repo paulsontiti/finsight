@@ -7,7 +7,7 @@ import type {
 import type { ITransactionRepository } from "../../domain/interfaces/transaction-repository.interface.js";
 import type { AuditService } from "../../services/audit.service.js";
 import type { IdempotencyService } from "../../services/idempotency.service.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
 interface TransferUsecaseInputProps {
   walletId: string;

@@ -1,6 +1,6 @@
 import type { UserSession } from "../../../generated/prisma/client.js";
 import type { PrismaUserSessionRepository } from "../../infrastructure/repositories/user-session.repository.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
 export interface SaveUserSessionInput {
   userId: string;

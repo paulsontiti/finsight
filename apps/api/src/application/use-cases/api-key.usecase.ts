@@ -1,14 +1,14 @@
-import type { IApiKeyRepository, IHashService } from "../../shared/types/index.js";
+import type {
+  IApiKeyRepository,
+  IHashService,
+} from "../../shared/types/index.js";
 import { ApiKeyGenerator } from "../../infrastructure/utils/api-key-generator.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
-
-
-
-export class ApiKeyUseCase implements UseCase<string,{apiKey:string}> {
+export class ApiKeyUseCase implements UseCase<string, { apiKey: string }> {
   constructor(
     private readonly repo: IApiKeyRepository,
-    private readonly hashService: IHashService
+    private readonly hashService: IHashService,
   ) {}
 
   async execute(ownerId: string) {
@@ -21,12 +21,12 @@ export class ApiKeyUseCase implements UseCase<string,{apiKey:string}> {
     // 3. Store only hashed key
     await this.repo.create({
       hashedKey,
-      ownerId
+      ownerId,
     });
 
     // 4. Return RAW key ONCE (important)
     return {
-      apiKey: rawKey
+      apiKey: rawKey,
     };
   }
 }

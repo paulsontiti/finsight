@@ -1,4 +1,4 @@
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 
 interface TransactionHistoryInputProps {
   userId: string;

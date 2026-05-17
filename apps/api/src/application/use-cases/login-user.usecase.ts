@@ -9,7 +9,7 @@ import {
   InvalidCredentialsError,
   UserNotFoundError,
 } from "../../shared/erors/domain.errors.js";
-import type { UseCase } from "../interfaces/useCase.js";
+import type { UseCase } from "../../domain/interfaces/useCase.js";
 import type { RefreshTokenService } from "../../services/refresh-token.service.js";
 import { DatabaseError } from "../../shared/erors/system.error.js";
 import { CreateUserEntity } from "../../domain/entities/user.entity.js";

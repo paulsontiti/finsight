@@ -1464,6 +1464,7 @@ export const TransactionScalarFieldEnum = {
   id: 'id',
   walletId: 'walletId',
   amount: 'amount',
+  currency: 'currency',
   type: 'type',
   reference: 'reference',
   description: 'description',
@@ -1479,6 +1480,7 @@ export const LedgerEntryScalarFieldEnum = {
   walletId: 'walletId',
   transactionId: 'transactionId',
   amount: 'amount',
+  currency: 'currency',
   type: 'type',
   createdAt: 'createdAt'
 } as const
